@@ -24,12 +24,12 @@ if os.path.isfile(args.input):
     text = textract.process(args.input)
     print(text)
     #with open()
+elif os.path.isdir(args.input):
+    print("good")
+else:
+    exit("Error: input must be an existing file or directory")
 
 ## Make output folder
 #args.output = os.path.join(args.output, 'parsaoutput')
-
-
-# if outfolder = None set outfolder = infolder
-
 
 #print(args.accumulate(args.integers))
