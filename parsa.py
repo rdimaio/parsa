@@ -18,11 +18,13 @@ if os.path.isfile(args.input):
     if args.output == None:
         args.output = os.path.dirname(args.input)
 
-    # Make output filename
+    # Make output filename by suffixing .txt to the input filename
     outfile = os.path.splitext(args.input)[0] + '.txt'
+    # Extract text
     text = str(textract.process(args.input))
-    print(text)
+
     # TODO - maybe make a recursive function out of this to improve it
+    # If file doesn't exist, write to it; if it exists already, add another '.txt' to it and write to it
     try:
         with open(outfile, "x") as fout:
             fout.write(text)
