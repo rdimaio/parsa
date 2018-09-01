@@ -32,13 +32,15 @@ if os.path.isfile(args.input):
         outfile = outfile + '.txt'
         with open(outfile, "x") as fout:
             fout.write(text)
-            
+# If input is a folder            
 elif os.path.isdir(args.input):
-    print("good")
+    # Create output folder
+    args.output = os.path.join(args.output, 'parsaoutput')
+    os.makedirs(args.output, exist_ok=True)
+    
+    # insert for loop that cycles through here
 else:
     exit("Error: input must be an existing file or directory")
 
-## Make output folder
-#args.output = os.path.join(args.output, 'parsaoutput')
 
 #print(args.accumulate(args.integers))
