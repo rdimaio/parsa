@@ -17,13 +17,20 @@ if os.path.isfile(args.input):
     # If output directory wasn't provided, set it to the input directory
     if args.output == None:
         args.output = os.path.dirname(args.input)
-    print(args.output)
+
     # Make output filename
-    filename = os.path.splitext(args.input)[0] + '.txt'
-    print(filename)
-    text = textract.process(args.input)
+    outfile = os.path.splitext(args.input)[0] + '.txt'
+    text = str(textract.process(args.input))
     print(text)
-    #with open()
+    # TODO - maybe make a recursive function out of this to improve it
+    try:
+        with open(outfile, "x") as fout:
+            fout.write(text)
+    except FileExistsError:
+        outfile = outfile + '.txt'
+        with open(outfile, "x") as fout:
+            fout.write(text)
+            
 elif os.path.isdir(args.input):
     print("good")
 else:
