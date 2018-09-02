@@ -12,7 +12,7 @@ argparser.add_argument('--output', '-o', nargs='?', default=None, help='output f
 # Parse arguments into NameSpace objects
 args = argparser.parse_args()
 
-# Check if input is file or dir
+# If input is a file
 if os.path.isfile(args.input):
     # If output directory wasn't provided, set it to the input directory
     if args.output == None:
@@ -23,7 +23,8 @@ if os.path.isfile(args.input):
     # Extract text
     text = str(textract.process(args.input))
 
-    # TODO - maybe make a recursive function out of this to improve it
+    # TODO - maybe make a recursive function out of this to improve it;
+    # TODO - maybe just needs a while loop
     # If file doesn't exist, write to it; if it exists already, add another '.txt' to it and write to it
     try:
         with open(outfile, "x") as fout:
@@ -34,11 +35,19 @@ if os.path.isfile(args.input):
             fout.write(text)
 # If input is a folder            
 elif os.path.isdir(args.input):
+    # If output directory wasn't provided, set it to the input directory
+    if args.output == None:
+        args.output = args.input
+
     # Create output folder
     args.output = os.path.join(args.output, 'parsaoutput')
     os.makedirs(args.output, exist_ok=True)
     
-    # insert for loop that cycles through here
+    # Cycle through all files in the directory recursively
+    # https://stackoverflow.com/a/36898903
+    for root, dirs, files in os.walk(args.input):
+        for filename in files:
+            print(filename)
 else:
     exit("Error: input must be an existing file or directory")
 
