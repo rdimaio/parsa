@@ -15,6 +15,8 @@ args = argparser.parse_args()
 # If input is a file
 if os.path.isfile(args.input):
     # If output directory wasn't provided, set it to the input directory
+    # TODO - am i actually using output args.output later on? i don't think so
+    # TODO - i need to make it so that it works when the output folder is specified, currently it doesn't
     if args.output == None:
         args.output = os.path.dirname(args.input)
 
@@ -47,6 +49,17 @@ elif os.path.isdir(args.input):
     # https://stackoverflow.com/a/36898903
     for root, dirs, files in os.walk(args.input):
         for filename in files:
+            text = str(textract.process(filename))
+            # Must change this; currently splitext does this: /home/postrick/Documents/Programming/testdocs/test.txt; i want to strip the extension and remove the directory, then join it to parsaoutput and add .txt
+            outfile = os.path.splitext(args.input)[0] + '.txt'
+            try:
+                with open(outfile, "x") as fout:
+                    fout.write(text)
+            except FileExistsError:
+                outfile = outfile + '.txt'
+                with open(outfile, "x") as fout:
+                   fout.write(text)
+
             print(filename)
 else:
     exit("Error: input must be an existing file or directory")
