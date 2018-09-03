@@ -2,6 +2,7 @@ import argparse
 import os
 import textract
 
+
 argparser = argparse.ArgumentParser(description='Textract-based text parser that supports most text file extensions. Writes the output for each file to [filename].txt.')
 
 # TODO - improve argument descriptions, break strings into shorter codelines
@@ -12,27 +13,30 @@ argparser.add_argument('--output', '-o', nargs='?', default=None, help='output f
 # Parse arguments into NameSpace objects
 args = argparser.parse_args()
 
+
 # If input is a file
 if os.path.isfile(args.input):
+
+    infile = args.input
+
     # If output directory wasn't provided, set it to the input directory
-    # TODO - am i actually using output args.output later on? i don't think so
-    # TODO - i need to make it so that it works when the output folder is specified, currently it doesn't
     if args.output == None:
-        args.output = os.path.dirname(args.input)
+        outdir = os.path.dirname(infile)
+    else:
+        outdir = args.output
+
+    filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))
+
+
+    outfile = os.path.join(outdir, filename_noextension) + '.txt'
+    print(outfile)
 
     # Extract text
-    text = str(textract.process(args.input))
-
-    # Get filename
-    filename = os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))
-
-    # Make output filename by joining the filename with the output path and suffix .txt to it
-    outfile = os.path.join(args.output, filename) + '.txt'
-    print(outfile)
+    text = str(textract.process(infile))
 
     # TODO - maybe make a recursive function out of this to improve it;
     # TODO - maybe just needs a while loop
-    # If file doesn't exist, write to it; if it exists already, add another '.txt' to it and write to it
+    # If file doesn't exist, write to it; if it exists already, add original file extension previously (e.g. test.pdf.txt)
     try:
         with open(outfile, "x") as fout:
             fout.write(text)
@@ -56,7 +60,10 @@ elif os.path.isdir(args.input):
         for filename in files:
             text = str(textract.process(filename))
             # TODO - Must change this; currently splitext does this: /home/postrick/Documents/Programming/testdocs/test.txt; i want to strip the extension and remove the directory, then join it to parsaoutput and add .txt
-            outfile = os.path.splitext(args.input)[0] + '.txt'
+            # Get input filename without extension
+            infile = os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))
+            # Make output filename by joining the filename with the output path and suffix .txt to it
+            outfile = os.path.join(args.output, infile) + '.txt'
             try:
                 with open(outfile, "x") as fout:
                     fout.write(text)
