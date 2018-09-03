@@ -23,8 +23,11 @@ if os.path.isfile(args.input):
     # Extract text
     text = str(textract.process(args.input))
 
-    # Make output filename by suffixing .txt to the input filename
-    outfile = os.path.join(args.output, os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))) + '.txt'
+    # Get filename
+    filename = os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))
+
+    # Make output filename by joining the filename with the output path and suffix .txt to it
+    outfile = os.path.join(args.output, filename) + '.txt'
     print(outfile)
 
     # TODO - maybe make a recursive function out of this to improve it;
