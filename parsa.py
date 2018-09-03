@@ -3,6 +3,7 @@ import os
 import textract
 
 def set_outdir(args_outdir, indir):
+    # If output directory wasn't provided, set it to the input directory
     if args_outdir == None:
         outdir = indir
     else:
@@ -25,12 +26,9 @@ args = argparser.parse_args()
 if os.path.isfile(args.input):
 
     infile = args.input
-
-    # If output directory wasn't provided, set it to the input directory
-    # TODO - maybe make  set_outdir(args.output) folder
     outdir = set_outdir(args.output, os.path.dirname(infile))
 
-    filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))
+    filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(infile)[0]))
 
     # os.path.join creates paths that work in multiple OSes
     outfile = os.path.join(outdir, filename_noextension) + '.txt'
@@ -51,8 +49,8 @@ if os.path.isfile(args.input):
             fout.write(text)
 # If input is a folder            
 elif os.path.isdir(args.input):
+
     indir = args.input
-    # If output directory wasn't provided, set it to the input directory
     outdir = set_outdir(args.outdir, indir)
 
     # Create output folder
