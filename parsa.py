@@ -2,6 +2,13 @@ import argparse
 import os
 import textract
 
+def set_outdir(args_outdir, indir):
+    if args_outdir == None:
+        outdir = indir
+    else:
+        outdir = args_outdir
+    return outdir
+
 
 argparser = argparse.ArgumentParser(description='Textract-based text parser that supports most text file extensions. Writes the output for each file to [filename].txt.')
 
@@ -21,16 +28,13 @@ if os.path.isfile(args.input):
 
     # If output directory wasn't provided, set it to the input directory
     # TODO - maybe make  set_outdir(args.output) folder
-    if args.output == None:
-        outdir = os.path.dirname(infile)
-    else:
-        outdir = args.output
+    outdir = set_outdir(args.output, os.path.dirname(infile))
 
     filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))
 
     # os.path.join creates paths that work in multiple OSes
     outfile = os.path.join(outdir, filename_noextension) + '.txt'
- 
+
     # Extract text
     # TODO - maybe need to decode instead of typecast to str
     text = str(textract.process(infile))
@@ -47,11 +51,12 @@ if os.path.isfile(args.input):
             fout.write(text)
 # If input is a folder            
 elif os.path.isdir(args.input):
+    indir = args.input
     # If output directory wasn't provided, set it to the input directory
-    if args.output == None:
-        args.output = args.input
+    outdir = set_outdir(args.outdir, indir)
 
     # Create output folder
+    # TODO - check that you change what needs to be changed to outdir
     args.output = os.path.join(args.output, 'parsaoutput')
     os.makedirs(args.output, exist_ok=True)
     
