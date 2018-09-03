@@ -20,6 +20,7 @@ if os.path.isfile(args.input):
     infile = args.input
 
     # If output directory wasn't provided, set it to the input directory
+    # TODO - maybe make  set_outdir(args.output) folder
     if args.output == None:
         outdir = os.path.dirname(infile)
     else:
@@ -27,11 +28,11 @@ if os.path.isfile(args.input):
 
     filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))
 
-
+    # os.path.join creates paths that work in multiple OSes
     outfile = os.path.join(outdir, filename_noextension) + '.txt'
-    print(outfile)
-
+ 
     # Extract text
+    # TODO - maybe need to decode instead of typecast to str
     text = str(textract.process(infile))
 
     # TODO - maybe make a recursive function out of this to improve it;
@@ -75,6 +76,3 @@ elif os.path.isdir(args.input):
             print(filename)
 else:
     exit("Error: input must be an existing file or directory")
-
-
-#print(args.accumulate(args.integers))
