@@ -20,10 +20,12 @@ if os.path.isfile(args.input):
     if args.output == None:
         args.output = os.path.dirname(args.input)
 
-    # Make output filename by suffixing .txt to the input filename
-    outfile = os.path.splitext(args.input)[0] + '.txt'
     # Extract text
     text = str(textract.process(args.input))
+
+    # Make output filename by suffixing .txt to the input filename
+    outfile = os.path.join(args.output, os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))) + '.txt'
+    print(outfile)
 
     # TODO - maybe make a recursive function out of this to improve it;
     # TODO - maybe just needs a while loop
@@ -50,7 +52,7 @@ elif os.path.isdir(args.input):
     for root, dirs, files in os.walk(args.input):
         for filename in files:
             text = str(textract.process(filename))
-            # Must change this; currently splitext does this: /home/postrick/Documents/Programming/testdocs/test.txt; i want to strip the extension and remove the directory, then join it to parsaoutput and add .txt
+            # TODO - Must change this; currently splitext does this: /home/postrick/Documents/Programming/testdocs/test.txt; i want to strip the extension and remove the directory, then join it to parsaoutput and add .txt
             outfile = os.path.splitext(args.input)[0] + '.txt'
             try:
                 with open(outfile, "x") as fout:
