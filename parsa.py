@@ -43,19 +43,30 @@ if os.path.isfile(args.input):
     outfile = os.path.join(outdir, filename_noextension) + '.txt'
 
     # Extract text
-    # utf-8 is used here as it's able to handle all languages efficiently (https://stackoverflow.com/a/2438901)
+    # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
     text = textract.process(infile).decode("utf-8")
+
+    # TODO - maybe rename file_counter/ put it somewhere else/ rename the first argument in the outfile addition to something like outfile_noextension
+    file_counter = 2
+    while os.path.exists(outfile):
+        outfile = os.path.join(outdir, filename_noextension) + str(file_counter) + '.txt'
+        file_counter += 1
+    
+    print(outfile)
+
+    with open(outfile, "x") as fout:
+            fout.write(text)
 
     # TODO - maybe make a recursive function out of this to improve it;
     # TODO - maybe just needs a while loop
     # If file doesn't exist, write to it; if it exists already, add original file extension previously (e.g. test.pdf.txt)
-    try:
-        with open(outfile, "x") as fout:
-            fout.write(text)
-    except FileExistsError:
-        outfile = outfile + '.txt'
-        with open(outfile, "x") as fout:
-            fout.write(text)
+    # try:
+    #     with open(outfile, "x") as fout:
+    #         fout.write(text)
+    # except FileExistsError:
+    #     outfile = outfile + '.txt'
+    #     with open(outfile, "x") as fout:
+    #         fout.write(text)
 # If input is a folder            
 elif os.path.isdir(args.input):
 
