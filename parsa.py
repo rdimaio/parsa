@@ -74,30 +74,24 @@ if os.path.isfile(args.input):
 # If input is a folder            
 elif os.path.isdir(args.input):
 
+    # Set IO variables
     indir = args.input
-    outdir = set_outdir(args.output, indir)
+    outdir = os.path.join(set_outdir(args.output, indir), 'parsaoutput')
+
     # Create output folder
-    # TODO - check that you change what needs to be changed to outdir
-    outdir = os.path.join(outdir, 'parsaoutput')
     os.makedirs(outdir, exist_ok=True)
 
     # Cycle through all files in the directory recursively
     # https://stackoverflow.com/a/36898903
-    for root, dirs, files in os.walk(indir):
+    for root, dirs, files in os.walk(indir, topdown=True):
+        # Remove the parsaoutput folder from the list of directories to scan
+        # (allowed by topdown=True in os.walk's parameters)
+        # https://stackoverflow.com/a/19859907
+        dirs[:] = [d for d in dirs if d != 'parsaoutput']
         for filename in files:
             infile = os.path.abspath(os.path.join(root, filename))
-            print(infile)
-            text = textract.process(infile).decode("utf-8")
-            filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(infile)[0]))
-            outfilepath_noextension = os.path.join(outdir, filename_noextension)
-            outfile = outfilepath_noextension + '.txt'
-            try:
-                with open(outfile, "x") as fout:
-                    fout.write(text)
-            except FileExistsError:
-                outfile = outfile + '.txt'
-                with open(outfile, "x") as fout:
-                   fout.write(text)
+            write_outfile(infile, outdir)
+            
 
 else:
     exit("Error: input must be an existing file or directory")
