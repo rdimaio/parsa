@@ -2,7 +2,6 @@ import argparse
 import os
 import textract
 
-# TODO - see if you can put file writing in a function
 # TODO - document functions
 
 def set_outdir(args_outdir, indir):
@@ -36,27 +35,37 @@ if os.path.isfile(args.input):
     outdir = set_outdir(args.output, os.path.dirname(infile))
 
     # Get input's filename with neither its path nor extension
+    # e.g. /home/testdocs/test.pdf -> test
+    # TODO - maybe change to just filename (be aware of conflicts with filename in os.path.isdir case)
     filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(infile)[0]))
 
     # Create path for output file
     # os.path.join intelligently creates filepaths that work cross-platform
-    outfile = os.path.join(outdir, filename_noextension) + '.txt'
+    # e.g. /home/testdocs/ + test.pdf -> /home/testdocs/test
+    outfilepath_noextension = os.path.join(outdir, filename_noextension)
+    outfile = outfilepath_noextension + '.txt'
 
     # Extract text
     # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
     text = textract.process(infile).decode("utf-8")
 
-    # TODO - maybe rename file_counter/ put it somewhere else/ rename the first argument in the outfile addition to something like outfile_noextension
-    file_counter = 2
+
+    # TODO - maybe rename file_exists_counter/ put it somewhere else/ rename the first argument in the outfile addition to something like outfile_noextension
+    # TODO - might still be confusing to understand which format is the source, so maybe do soomething like sample.txt -> sample.txt, sample.pdf -> sample.pdf.txt, sample.pdf
+    file_exists_counter = 2
     while os.path.exists(outfile):
-        outfile = os.path.join(outdir, filename_noextension) + str(file_counter) + '.txt'
-        file_counter += 1
+        input_extension = os.path.splitext(infile)[1]
+        if file_exists_counter == 2:
+            outfile = outfilepath_noextension + input_extension + '.txt'
+        else:
+            outfile = outfilepath_noextension + str(file_exists_counter) + '.txt'
+        file_exists_counter += 1
     
     print(outfile)
-
+#   
     with open(outfile, "x") as fout:
             fout.write(text)
-
+#   
     # TODO - maybe make a recursive function out of this to improve it;
     # TODO - maybe just needs a while loop
     # If file doesn't exist, write to it; if it exists already, add original file extension previously (e.g. test.pdf.txt)
