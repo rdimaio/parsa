@@ -2,8 +2,6 @@ import argparse
 import os
 import textract
 
-# TODO - document functions
-
 def set_outdir(args_outdir, indir):
     """Set output directory based on whether a custom outside directory was provided or not, and return it."""
     # If output directory wasn't provided, set it to the input directory
@@ -23,6 +21,9 @@ def parse_arguments():
     # Parse arguments into Namespace
     args = argparser.parse_args()
     return args
+
+# TODO - work on the isdir case first, so i can figure out which kind of function i need
+# def write_outfile(out)
 
 # Get CLI arguments
 args = parse_arguments()
@@ -50,7 +51,6 @@ if os.path.isfile(args.input):
     text = textract.process(infile).decode("utf-8")
 
     # TODO - is it really convenient to make a function out of this? should i define outfile variables inside the function in order to pass less arguments?
-    write_outfile(outfile, infile)
 
     file_exists_counter = 2
     while os.path.exists(outfile):
@@ -79,14 +79,12 @@ elif os.path.isdir(args.input):
     # https://stackoverflow.com/a/36898903
     for root, dirs, files in os.walk(indir):
         for filename in files:
-            # TODO - loop works, but textract needs the entire filepath to access the file, so need to pass that
-            print(filename)
-            text = str(textract.process(filename))
-            # TODO - Must change this; currently splitext does this: /home/postrick/Documents/Programming/testdocs/test.txt; i want to strip the extension and remove the directory, then join it to parsaoutput and add .txt
-            # Get input filename without extension
-            infile = os.path.basename(os.path.normpath(os.path.splitext(args.input)[0]))
-            # Make output filename by joining the filename with the output path and suffix .txt to it
-            outfile = os.path.join(outdir, infile) + '.txt'
+            infile = os.path.abspath(os.path.join(root, filename))
+            print(infile)
+            text = textract.process(infile).decode("utf-8")
+            filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(infile)[0]))
+            outfilepath_noextension = os.path.join(outdir, filename_noextension)
+            outfile = outfilepath_noextension + '.txt'
             try:
                 with open(outfile, "x") as fout:
                     fout.write(text)
