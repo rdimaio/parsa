@@ -22,22 +22,13 @@ def parse_arguments():
     args = argparser.parse_args()
     return args
 
-# TODO - work on the isdir case first, so i can figure out which kind of function i need
-# def write_outfile(out)
-
-# Get CLI arguments
-args = parse_arguments()
-
-# If input is a file
-if os.path.isfile(args.input):
-
-    # Set IO variables
-    infile = args.input
-    outdir = set_outdir(args.output, os.path.dirname(infile))
-
+def write_outfile(infile, outdir):
+    """Compose output filepath and write the extracted text to it.
+    If a file with the same name as the output file already exists in the output directory, 
+    the input file's extension will be included in the output file's name before the .txt extension.
+    Any following cases of file already existing will result in the output file being identified by a number."""
     # Get input's filename with neither its path nor extension
     # e.g. /home/testdocs/test.pdf -> test
-    # TODO - maybe change to just filename (be aware of conflicts with filename in os.path.isdir case)
     filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(infile)[0]))
 
     # Create path for output file
@@ -64,6 +55,22 @@ if os.path.isfile(args.input):
     print(outfile)   
     with open(outfile, "x") as fout:
             fout.write(text)
+
+# Get CLI arguments
+args = parse_arguments()
+
+# If input is a file
+if os.path.isfile(args.input):
+
+    # Set IO variables
+    infile = args.input
+    outdir = set_outdir(args.output, os.path.dirname(infile))
+
+    
+
+    write_outfile(infile, outdir)
+
+    
     
 # If input is a folder            
 elif os.path.isdir(args.input):
