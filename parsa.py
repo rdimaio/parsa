@@ -27,6 +27,7 @@ def write_outfile(infile, outdir):
     If a file with the same name as the output file already exists in the output directory, 
     the input file's extension will be included in the output file's name before the .txt extension.
     Any following cases of file already existing will result in the output file being identified by a number."""
+
     # Get input's filename with neither its path nor extension
     # e.g. /home/testdocs/test.pdf -> test
     filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(infile)[0]))
@@ -41,8 +42,7 @@ def write_outfile(infile, outdir):
     # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
     text = textract.process(infile).decode("utf-8")
 
-    # TODO - is it really convenient to make a function out of this? should i define outfile variables inside the function in order to pass less arguments?
-
+    # TODO - maybe try cleaning this up / changing the naming convention to something like test.pdf2.txt
     file_exists_counter = 2
     while os.path.exists(outfile):
         input_extension = os.path.splitext(infile)[1]
@@ -51,10 +51,11 @@ def write_outfile(infile, outdir):
         else:
             outfile = outfilepath_noextension + str(file_exists_counter) + '.txt'
         file_exists_counter += 1
-    
-    print(outfile)   
+      
     with open(outfile, "x") as fout:
             fout.write(text)
+    # TODO - maybe make it return True and then check if the writing successfully happened to secure it.
+
 
 # Get CLI arguments
 args = parse_arguments()
@@ -66,11 +67,9 @@ if os.path.isfile(args.input):
     infile = args.input
     outdir = set_outdir(args.output, os.path.dirname(infile))
 
-    
-
+    # Extract text and write it to the output file
     write_outfile(infile, outdir)
-
-    
+    print(outfile) 
     
 # If input is a folder            
 elif os.path.isdir(args.input):
