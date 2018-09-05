@@ -49,9 +49,9 @@ if os.path.isfile(args.input):
     # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
     text = textract.process(infile).decode("utf-8")
 
+    # TODO - is it really convenient to make a function out of this? should i define outfile variables inside the function in order to pass less arguments?
+    write_outfile(outfile, infile)
 
-    # TODO - maybe rename file_exists_counter/ put it somewhere else/ rename the first argument in the outfile addition to something like outfile_noextension
-    # TODO - might still be confusing to understand which format is the source, so maybe do soomething like sample.txt -> sample.txt, sample.pdf -> sample.pdf.txt, sample.pdf
     file_exists_counter = 2
     while os.path.exists(outfile):
         input_extension = os.path.splitext(infile)[1]
@@ -61,21 +61,10 @@ if os.path.isfile(args.input):
             outfile = outfilepath_noextension + str(file_exists_counter) + '.txt'
         file_exists_counter += 1
     
-    print(outfile)
-#   
+    print(outfile)   
     with open(outfile, "x") as fout:
             fout.write(text)
-#   
-    # TODO - maybe make a recursive function out of this to improve it;
-    # TODO - maybe just needs a while loop
-    # If file doesn't exist, write to it; if it exists already, add original file extension previously (e.g. test.pdf.txt)
-    # try:
-    #     with open(outfile, "x") as fout:
-    #         fout.write(text)
-    # except FileExistsError:
-    #     outfile = outfile + '.txt'
-    #     with open(outfile, "x") as fout:
-    #         fout.write(text)
+    
 # If input is a folder            
 elif os.path.isdir(args.input):
 
