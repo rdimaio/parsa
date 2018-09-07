@@ -4,13 +4,39 @@ import textract
 
 # TODO - see if you can break down functions even further (e.g. parse_arguments -> set_cli_information + parse_arguments)
 
+class SmartFormatter(argparse.HelpFormatter):
+    """Allows formatting in the CLI help menu.
+    Called by beginning a string with R| in _set_arguments().
+    https://stackoverflow.com/a/22157136
+    """
+    def _split_lines(self, text, width):
+        if text.startswith('R|'):
+            return text[2:].splitlines()  
+        # this is the RawTextHelpFormatter._split_lines
+        return argparse.HelpFormatter._split_lines(self, text, width)
+
+def _set_arguments():
+    """Set CLI description and arguments."""
+    # TODO - describe what the stats file will include
+    argparser = argparse.ArgumentParser(description=('Textract-based text parser that supports most text file extensions. '
+    'Parsa can parse multiple formats at once, ' 
+    'writing them to .txt files in the directory of choice.'), formatter_class=SmartFormatter)
+
+    argparser.add_argument('input', help=('input file or folder; if a folder is passed as input, '
+    'parsa will scan every file inside it recursively (scanning subfolders as well)'))
+
+    argparser.add_argument('--stats', '-s', nargs='?', help='output stats file')
+
+    argparser.add_argument('--output', '-o', nargs='?', default=None, help=('R|folder where the output files '
+    'will be stored. The default folder is: \n'
+    '(a) the input file\'s parent folder, if the input is a file, or \n'
+    '(b) a folder named \'parsaoutput\' located in the input folder, if the input is a folder.'))
+
+    return argparser
+
 def parse_arguments():
     """Parse command-line arguments, and return a Namespace object containing them."""
-    # TODO - improve argument descriptions, break strings into shorter codelines
-    argparser = argparse.ArgumentParser(description='Textract-based text parser that supports most text file extensions. Writes the output for each file to [filename].txt.')
-    argparser.add_argument('input', help='input file or folder; if a folder is passed as input, parsa will scan every file inside it recursively (scanning subfolders as well)')
-    argparser.add_argument('--stats', '-s', nargs='?', help='output stats file')
-    argparser.add_argument('--output', '-o', nargs='?', default=None, help='output folder where the output files will be stored. If the input is a file, the default output directory is the input file\'s directory; otherwise, it\'s a folder named \'parsaoutput\' in the input folder.')
+    argparser = _set_arguments()
     # Parse arguments into Namespace
     args = argparser.parse_args()
     return args
@@ -60,7 +86,8 @@ def write_outfile(infile, outdir):
     # TODO - maybe make it return True and then check if the writing successfully happened to secure it.
 
 def get_filelist(indir):
-    """Return list of files in directory, including the files in all subdirectories.""" 
+    # TODO - check this with a lot of files, because theoretically you're going through 2 for loops for each file and that might be inefficient (O(n) still)
+    """Return list of files in the input directory, including the files in all subdirectories.""" 
     filelist = []
     # Cycle through all files in the directory recursively
     # https://stackoverflow.com/a/36898903
@@ -72,4 +99,4 @@ def get_filelist(indir):
         for filename in files:
             filepath = os.path.join(root, filename)
             filelist.append(filepath)
-    return(filelist)
+    return filelist
