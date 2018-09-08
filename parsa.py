@@ -41,5 +41,3 @@ elif os.path.isdir(args.input):
             
 else:
     exit("Error: input must be an existing file or directory")
-
-# TODO - normalize text at the end (unicode char at the end of pdf)

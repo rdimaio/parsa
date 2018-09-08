@@ -2,9 +2,7 @@ import argparse
 import os
 import textract
 
-# TODO - see if you can break down functions even further (e.g. parse_arguments -> set_cli_information + parse_arguments)
-
-class SmartFormatter(argparse.HelpFormatter):
+class _SmartFormatter(argparse.HelpFormatter):
     """Allows formatting in the CLI help menu.
     Called by beginning a string with R| in _set_arguments().
     https://stackoverflow.com/a/22157136
@@ -17,16 +15,18 @@ class SmartFormatter(argparse.HelpFormatter):
 
 def _set_arguments():
     """Set CLI description and arguments."""
-    # TODO - describe what the stats file will include
+
     argparser = argparse.ArgumentParser(description=('Textract-based text parser that supports most text file extensions. '
     'Parsa can parse multiple formats at once, ' 
-    'writing them to .txt files in the directory of choice.'), formatter_class=SmartFormatter)
+    'writing them to .txt files in the directory of choice.'), formatter_class=_SmartFormatter)
 
     argparser.add_argument('input', help=('input file or folder; if a folder is passed as input, '
     'parsa will scan every file inside it recursively (scanning subfolders as well)'))
 
+    # TODO - describe what the stats file will include
     argparser.add_argument('--stats', '-s', nargs='?', help='output stats file')
 
+    # TODO - find preference order of textract for file analysis, and add it in the help description here
     argparser.add_argument('--output', '-o', nargs='?', default=None, help=('R|folder where the output files '
     'will be stored. The default folder is: \n'
     '(a) the input file\'s parent folder, if the input is a file, or \n'
@@ -67,9 +67,17 @@ def write_outfile(infile, outdir):
     outfilepath_noextension = os.path.join(outdir, filename_noextension)
     outfile = outfilepath_noextension + '.txt'
 
+    # TODO - add try except filetypeerror here
     # Extract text
     # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
-    text = textract.process(infile).decode("utf-8")
+    text = textract.process(infile)
+    text = text.decode('utf-8')
+
+    # remove unnecessary space caused by the form feed (\x0c, \f) character at the end of .pdf files
+    if infile.endswith('.pdf'):
+        text = text.strip()
+
+    print(text)
 
     # TODO - maybe try cleaning this up / changing the naming convention to something like test.pdf2.txt
     file_exists_counter = 2
