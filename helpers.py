@@ -50,7 +50,24 @@ def set_outdir(args_outdir, indir):
         outdir = args_outdir
     return outdir
 
-def write_outfile(infile, outdir):
+def get_text(infile):
+    """Extract text from the input file using textract, returning an empty string if the extension is not supported."""
+    text = ''    
+    try:
+        text = textract.process(infile)
+        # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
+        text = text.decode('utf-8')
+        # remove unnecessary space caused by the form feed (\x0c, \f) character at the end of .pdf files
+        if infile.endswith('.pdf'):
+            text = text.strip()
+    # The only exception we need to account for is ExtensionNotSupported;
+    # the CLI is handled by argparse, and file existence is checked in parsa.py
+    except textract.exceptions.ExtensionNotSupported:
+        print("Error while parsing file: " + infile)
+        print("Extension not supported\n")
+    return text
+
+def write_outfile(infile, outdir, text):
     """Compose output filepath and write the extracted text to it.
     If a file with the same name as the output file already exists in the output directory, 
     the input file's extension will be included in the output file's name before the .txt extension.
@@ -66,25 +83,6 @@ def write_outfile(infile, outdir):
     # e.g. /home/testdocs/ + test.pdf -> /home/testdocs/test
     outfilepath_noextension = os.path.join(outdir, filename_noextension)
     outfile = outfilepath_noextension + '.txt'
-
-    # Extract text
-    # TODO - maybe make a function out of this? might be redundant though, you would return false twice, once in the function and another time here
-    # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)    
-    try:
-        text = textract.process(infile)
-    # The only exception we need to account for is ExtensionNotSupported;
-    # the CLI is handled by argparse, and file existence is checked in parsa.py
-    except textract.exceptions.ExtensionNotSupported:
-        print("Error while parsing file: " + infile)
-        print("Extension not supported\n")
-        return False
-    
-    # TODO - see if you can decode directly in the textract command
-    text = text.decode('utf-8')
-
-    # remove unnecessary space caused by the form feed (\x0c, \f) character at the end of .pdf files
-    if infile.endswith('.pdf'):
-        text = text.strip()
 
     # TODO - maybe try cleaning this up / changing the naming convention to something like test.pdf2.txt
     file_exists_counter = 2

@@ -21,7 +21,11 @@ if os.path.isfile(args.input):
     outdir = set_outdir(args.output, indir)
 
     # Extract text and write it to the output file
-    write_outfile(infile, outdir) 
+    text = get_text(infile)
+    
+    # Write to outfile if text has been extracted successfully
+    if text:
+        write_outfile(infile, outdir, text) 
     
 # If input is a folder            
 elif os.path.isdir(args.input):
@@ -36,7 +40,9 @@ elif os.path.isdir(args.input):
     filelist = get_filelist(indir)
 
     for infile in filelist:
-        write_outfile(infile, outdir)
+        text = get_text(infile)
+        if text:
+            write_outfile(infile, outdir, text)
 
             
 else:
