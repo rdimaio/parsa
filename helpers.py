@@ -15,7 +15,6 @@ class _SmartFormatter(argparse.HelpFormatter):
 
 def _set_arguments():
     """Set CLI description and arguments."""
-
     argparser = argparse.ArgumentParser(description=('Textract-based text parser that supports most text file extensions. '
     'Parsa can parse multiple formats at once, ' 
     'writing them to .txt files in the directory of choice.'), formatter_class=_SmartFormatter)
@@ -31,7 +30,6 @@ def _set_arguments():
     'will be stored. The default folder is: \n'
     '(a) the input file\'s parent folder, if the input is a file, or \n'
     '(b) a folder named \'parsaoutput\' located in the input folder, if the input is a folder.'))
-
     return argparser
 
 def parse_arguments():
@@ -52,6 +50,7 @@ def set_outdir(args_outdir, indir):
 
 def get_text(infile):
     """Extract text from the input file using textract, returning an empty string if the extension is not supported."""
+
     text = ''    
     try:
         text = textract.process(infile)
@@ -69,12 +68,15 @@ def get_text(infile):
 
 def name_outfile(infile, outdir):
     """Compose output filepath to avoid overwriting existing files.
+
     If a file with the same name as the output file already exists in the output directory, 
     the input file's extension will be included in the output file's name before the .txt extension.
     (e.g. if foo.txt already exists, foo.pdf will be extracted to foo.pdf.txt)
+
     An incrementing counter will be included before .txt to identify subsequent extractions with the same name.
     (if foo.pdf.txt exists as well, foo.pdf will be extracted to foo.pdf2.txt, with 2 being the incrementing counter)
     """
+
     # Get input's filename with neither its path nor extension
     # e.g. /home/testdocs/test.pdf -> test
     filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(infile)[0]))
@@ -86,14 +88,6 @@ def name_outfile(infile, outdir):
     outfile = outfilepath_noextension + '.txt'
 
     file_exists_counter = 1
-    # input_extension = ''
-    # while os.path.exists(outfile):
-    #     if file_exists_counter == 2:
-    #         input_extension = os.path.splitext(infile)[1]
-    #         outfile = outfilepath_noextension + input_extension + '.txt'
-    #     else:
-    #         outfile = outfilepath_noextension + str(file_exists_counter) + '.txt'
-    #     file_exists_counter += 1
 
     while os.path.exists(outfile):
         input_extension = os.path.splitext(infile)[1]
@@ -103,21 +97,11 @@ def name_outfile(infile, outdir):
 
             outfile = outfilepath_noextension + input_extension + str(file_exists_counter) + '.txt'
         file_exists_counter += 1
-    print(outfile)
     return outfile
 
-
-
-def write_outfile(infile, outdir, text):
-    # TODO - change docstring
-    """Compose output filepath and write the extracted text to it.
-    If a file with the same name as the output file already exists in the output directory, 
-    the input file's extension will be included in the output file's name before the .txt extension.
-    Any following cases of file already existing will result in the output file being identified by a number.
-    """
-
-    outfile = name_outfile(infile, outdir)
-      
+def write_outfile(outfile, text):
+    """Write input text string to a file."""
+    # TODO - see if you can add error checking here, otherwise remove this function and put the with statement in the main file
     with open(outfile, "x") as fout:
             fout.write(text)
     # TODO - maybe make it return True and then check if the writing successfully happened to secure it.
