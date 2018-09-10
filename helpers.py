@@ -67,13 +67,14 @@ def get_text(infile):
         print("Extension not supported\n")
     return text
 
-def write_outfile(infile, outdir, text):
-    """Compose output filepath and write the extracted text to it.
+def name_outfile(infile, outdir):
+    """Compose output filepath to avoid overwriting existing files.
     If a file with the same name as the output file already exists in the output directory, 
     the input file's extension will be included in the output file's name before the .txt extension.
-    Any following cases of file already existing will result in the output file being identified by a number.
+    (e.g. if foo.txt already exists, foo.pdf will be extracted to foo.pdf.txt)
+    An incrementing counter will be included before .txt to identify subsequent extractions with the same name.
+    (if foo.pdf.txt exists as well, foo.pdf will be extracted to foo.pdf2.txt, with 2 being the incrementing counter)
     """
-
     # Get input's filename with neither its path nor extension
     # e.g. /home/testdocs/test.pdf -> test
     filename_noextension = os.path.basename(os.path.normpath(os.path.splitext(infile)[0]))
@@ -84,15 +85,38 @@ def write_outfile(infile, outdir, text):
     outfilepath_noextension = os.path.join(outdir, filename_noextension)
     outfile = outfilepath_noextension + '.txt'
 
-    # TODO - maybe try cleaning this up / changing the naming convention to something like test.pdf2.txt
-    file_exists_counter = 2
+    file_exists_counter = 1
+    # input_extension = ''
+    # while os.path.exists(outfile):
+    #     if file_exists_counter == 2:
+    #         input_extension = os.path.splitext(infile)[1]
+    #         outfile = outfilepath_noextension + input_extension + '.txt'
+    #     else:
+    #         outfile = outfilepath_noextension + str(file_exists_counter) + '.txt'
+    #     file_exists_counter += 1
+
     while os.path.exists(outfile):
         input_extension = os.path.splitext(infile)[1]
-        if file_exists_counter == 2:
+        if file_exists_counter == 1:
             outfile = outfilepath_noextension + input_extension + '.txt'
         else:
-            outfile = outfilepath_noextension + str(file_exists_counter) + '.txt'
+
+            outfile = outfilepath_noextension + input_extension + str(file_exists_counter) + '.txt'
         file_exists_counter += 1
+    print(outfile)
+    return outfile
+
+
+
+def write_outfile(infile, outdir, text):
+    # TODO - change docstring
+    """Compose output filepath and write the extracted text to it.
+    If a file with the same name as the output file already exists in the output directory, 
+    the input file's extension will be included in the output file's name before the .txt extension.
+    Any following cases of file already existing will result in the output file being identified by a number.
+    """
+
+    outfile = name_outfile(infile, outdir)
       
     with open(outfile, "x") as fout:
             fout.write(text)
