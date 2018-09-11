@@ -20,6 +20,7 @@ if os.path.isfile(args.input):
     indir = os.path.dirname(infile)
     outdir = set_outdir(args.output, indir)
 
+    # TODO - maybe if file endswith .txt, just copy and paste (premature optimization, though)
     # Extract text and write it to the output file
     text = get_text(infile)
     

@@ -2,6 +2,8 @@ import argparse
 import os
 import textract
 
+# TODO - maybe split this file in more files (e.g. cli.py, text.py)
+
 class _SmartFormatter(argparse.HelpFormatter):
     """Allows formatting in the CLI help menu.
     Called by beginning a string with R| in _set_arguments().
@@ -51,6 +53,7 @@ def set_outdir(args_outdir, indir):
 def get_text(infile):
     """Extract text from the input file using textract, returning an empty string if the extension is not supported."""
 
+    # If text is not extracted, the function will just return an empty string
     text = ''    
     try:
         text = textract.process(infile)
@@ -67,6 +70,7 @@ def get_text(infile):
     return text
 
 def name_outfile(infile, outdir):
+    # TODO - maybe change name to compose_path or name_file (generalize)
     """Compose output filepath to avoid overwriting existing files.
 
     If a file with the same name as the output file already exists in the output directory, 
@@ -94,17 +98,32 @@ def name_outfile(infile, outdir):
         if file_exists_counter == 1:
             outfile = outfilepath_noextension + input_extension + '.txt'
         else:
-
+            #TODO - see if i can delete this whiteline the one the comment is on rn
             outfile = outfilepath_noextension + input_extension + str(file_exists_counter) + '.txt'
         file_exists_counter += 1
     return outfile
 
 def write_outfile(outfile, text):
-    """Write input text string to a file."""
+    """Write input text string to a file, returning either true or false based on successful writing."""
     # TODO - see if you can add error checking here, otherwise remove this function and put the with statement in the main file
     with open(outfile, "x") as fout:
             fout.write(text)
-    # TODO - maybe make it return True and then check if the writing successfully happened to secure it.
+
+    try:
+        with open(outfile, "x") as fout:
+            fout.write(text)
+        return True
+    # Check for file existence, as we're writing to outfile using the exclusive 'x' option
+    except FileExistsError:
+        print("Error while writing to file: " + outfile)
+        print("File already exists\n")
+        return False
+    # Check for any possible OS errors
+    except OSError:
+        print("Error while writing to file: " + outfile)
+        print("OSError\n")
+
+        return False
 
 def get_filelist(indir):
     # TODO - check this with a lot of files, because theoretically you're going through 2 for loops for each file and that might be inefficient (O(n) still)
