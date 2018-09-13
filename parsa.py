@@ -2,6 +2,7 @@ import argparse
 import os
 import textract
 import time
+from cli import *
 from helpers import *
 
 # timing tool
