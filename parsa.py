@@ -29,7 +29,7 @@ if os.path.isfile(args.input):
     if text:
         outfile = compose_unique_filepath(infile, outdir)
         try:
-            write_outfile(outfile, text) 
+            write_str_to_file(text, outfile) 
         except OSError as e:
             print(e)
     
@@ -50,7 +50,7 @@ elif os.path.isdir(args.input):
         if text:
             outfile = compose_unique_filepath(infile,outdir)
             try:
-                write_outfile(outfile, text) 
+                write_str_to_file(text, outfile) 
             except OSError as e:
                 print(e)
 

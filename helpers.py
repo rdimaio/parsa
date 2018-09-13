@@ -1,8 +1,6 @@
 import os
 import textract
 
-# TODO - maybe split this file in more files (e.g. cli.py, text.py)
-
 def set_outdir(args_outdir, indir):
     """Set output directory based on whether a custom outside directory was provided or not, and return it."""
     # If output directory wasn't provided, set it to the input directory
@@ -67,8 +65,7 @@ def compose_unique_filepath(infile, outdir):
         file_exists_counter += 1
     return outfile
 
-def write_outfile(outfile, text):
-    # TODO - change docstring
+def write_str_to_file(text, outfile):
     """Write input text string to a file, returning either true or false based on successful writing."""
     with open(outfile, "x") as fout:
         fout.write(text)
