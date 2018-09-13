@@ -26,8 +26,11 @@ if os.path.isfile(args.input):
     
     # Write to outfile if text has been extracted successfully
     if text:
-        outfile = name_outfile(infile, outdir)
-        write_outfile(outfile, text) 
+        outfile = compose_unique_filepath(infile, outdir)
+        try:
+            write_outfile(outfile, text) 
+        except OSError as e:
+            print(e)
     
 # If input is a folder            
 elif os.path.isdir(args.input):
@@ -44,8 +47,11 @@ elif os.path.isdir(args.input):
     for infile in filelist:
         text = get_text(infile)
         if text:
-            outfile = name_outfile(infile,outdir)
-            write_outfile(outfile, text)
+            outfile = compose_unique_filepath(infile,outdir)
+            try:
+                write_outfile(outfile, text) 
+            except OSError as e:
+                print(e)
 
             
 else:
