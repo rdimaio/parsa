@@ -66,7 +66,7 @@ def compose_unique_filepath(infile, outdir):
     return outfile
 
 def write_str_to_file(text, outfile):
-    """Write input text string to a file, returning either true or false based on successful writing."""
+    """Write input text string to a file."""
     with open(outfile, "x") as fout:
         fout.write(text)
 

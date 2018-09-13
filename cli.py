@@ -24,8 +24,6 @@ def _set_arguments():
     # TODO - describe what the stats file will include
     argparser.add_argument('--stats', '-s', nargs='?', help='output stats file')
 
-    # TODO - find preference order of textract for file analysis, and add it in the help description here
-    # probably not a good idea though, seems to be inconsistent
     argparser.add_argument('--output', '-o', nargs='?', default=None, help=('R|folder where the output files '
     'will be stored. The default folder is: \n'
     '(a) the input file\'s parent folder, if the input is a file, or \n'
