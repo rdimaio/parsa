@@ -17,11 +17,20 @@ def get_text(infile):
 
     try:
         text = textract.process(infile)
-    # The only exception we need to account for is ExtensionNotSupported;
+    # We only need to check for unsupported extensions and shell errors;
     # the CLI is handled by argparse, and file existence is checked in parsa.py
     except textract.exceptions.ExtensionNotSupported:
         print("Error while parsing file: " + infile)
         print("Extension not supported\n")
+    # Skip file if parsing has failed
+    except textract.exceptions.ShellError as e:
+        print("Error while parsing file: " + infile)
+        print(e)
+    # Temporary solution for no_ext cases
+    except UnicodeDecodeError:
+        print("Error while parsing file: " + infile)
+        print("File has no extension")
+    # If no exceptions happened, continue extracting text
     else:
         # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
         text = text.decode('utf-8')
