@@ -36,9 +36,10 @@ def get_text(infile, _infile_extension=None):
     except UnicodeDecodeError:
         print("Error while parsing file: " + infile)
         print("File has no extension\n")
+
+        # Prompt the user for the input file's extension
         # textract.process adds a dot before the input extension if it's not already present (e.g. txt -> .txt)
         _infile_extension = input("Please input the file's extension (e.g. .pdf or pdf):")
-        # TODO - work on here, compose_unique_filepath is fine for now(but hceck what happens with duplicates and extensiosn shit)
         
         # Call the function again; an exception will be raised on failure
         text = get_text(infile, _infile_extension)
