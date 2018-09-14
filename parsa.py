@@ -46,9 +46,8 @@ elif os.path.isdir(args.input):
 
     for infile in filelist:
         text = get_text(infile)
-        print(text)
         if text:
-            outfile = compose_unique_filepath(infile,outdir)
+            outfile = compose_unique_filepath(infile, outdir)
             try:
                 write_str_to_file(text, outfile) 
             except OSError as e:
