@@ -46,6 +46,7 @@ elif os.path.isdir(args.input):
 
     for infile in filelist:
         text = get_text(infile)
+        print(text)
         if text:
             outfile = compose_unique_filepath(infile,outdir)
             try:
