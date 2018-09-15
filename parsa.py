@@ -3,7 +3,8 @@ import os
 import textract
 import time
 from cli import *
-from helpers import *
+from filesystem import *
+from text import *
 
 # timing tool
 # t0 = time.time()

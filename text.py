@@ -1,5 +1,8 @@
 import textract
 
+# TODO - maybe reorder functions, seems like it should work either way
+# https://stackoverflow.com/questions/758188/make-function-definition-in-a-python-file-order-independent
+
 def _process_text(text, _infile_extension):
     """Process extracted text and return it as a simple string."""
     # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
