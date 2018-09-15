@@ -10,6 +10,15 @@ def set_outdir(args_outdir, indir):
         outdir = args_outdir
     return outdir
 
+def _process_text(text, _infile_extension):
+    """Process the extracted text and return it as a simple string."""
+    # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
+    text = text.decode('utf-8')
+    # remove unnecessary trailing space caused by the form feed (\x0c, \f) character at the end of .pdf files
+    if _infile_extension == 'pdf' or _infile_extension == '.pdf':
+        text = text.strip()
+    return text
+
 def get_text(infile, _infile_extension=None):
     """Extract text from the input file using textract, returning an empty string if failing to do so.
     If the infile does not explicitly have an extension (UnicodeDecodeError), 
@@ -43,14 +52,9 @@ def get_text(infile, _infile_extension=None):
         
         # Call the function again; an exception will be raised on failure
         text = get_text(infile, _infile_extension)
-        
     # If no exceptions happened, format text adeguately
     else:
-        # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
-        text = text.decode('utf-8')
-        # remove unnecessary space caused by the form feed (\x0c, \f) character at the end of .pdf files
-        if infile.endswith('.pdf'):
-            text = text.strip()
+        text = _process_text(text, _infile_extension)
     return text
 
 def compose_unique_filepath(infile, outdir):
