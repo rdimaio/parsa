@@ -1,17 +1,12 @@
+"""utils/text.py - Text utilities for parsa
+
+Functions:
+    get_text - extract text from the input file
+    _process_text - process extracted text and return it as a simple string
+"""
+
 import os
 import textract
-
-# TODO - maybe reorder functions, seems like it should work either way
-# https://stackoverflow.com/questions/758188/make-function-definition-in-a-python-file-order-independent
-
-def _process_text(text, _infile_extension):
-    """Process extracted text and return it as a simple string."""
-    # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
-    text = text.decode('utf-8')
-    # Remove unnecessary trailing space caused by the form feed (\x0c, \f) character at the end of .pdf files
-    if _infile_extension == '.pdf' or _infile_extension == 'pdf':
-        text = text.strip()
-    return text
 
 def get_text(infile, _infile_extension=None):
     """Extract text from the input file using textract, returning an empty string if failing to do so.
@@ -53,4 +48,13 @@ def get_text(infile, _infile_extension=None):
             _infile_extension = os.path.splitext(infile)[1]
 
         text = _process_text(text, _infile_extension)
+    return text
+
+def _process_text(text, _infile_extension):
+    """Process extracted text and return it as a simple string."""
+    # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
+    text = text.decode('utf-8')
+    # Remove unnecessary trailing space caused by the form feed (\x0c, \f) character at the end of .pdf files
+    if _infile_extension == '.pdf' or _infile_extension == 'pdf':
+        text = text.strip()
     return text

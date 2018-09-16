@@ -1,3 +1,13 @@
+"""utils/cli.py - Command-line utilities for parsa
+
+Classes:
+    _SmartFormatter - allows formatting in the CLI help menu
+
+Functions:
+    parse_arguments - parse CLI arguments
+    _set_arguments - set CLI description and arguments
+"""
+
 import argparse
 
 class _SmartFormatter(argparse.HelpFormatter):
@@ -10,6 +20,13 @@ class _SmartFormatter(argparse.HelpFormatter):
             return text[2:].splitlines()  
         # this is the RawTextHelpFormatter._split_lines
         return argparse.HelpFormatter._split_lines(self, text, width)
+
+def parse_arguments():
+    """Parse command-line arguments, and return a Namespace object containing them."""
+    argparser = _set_arguments()
+    # Parse arguments into Namespace
+    args = argparser.parse_args()
+    return args
 
 def _set_arguments():
     """Set CLI description and arguments."""
@@ -28,10 +45,3 @@ def _set_arguments():
     '(a) the input file\'s parent folder, if the input is a file, or \n'
     '(b) a folder named \'parsaoutput\' located in the input folder, if the input is a folder.'))
     return argparser
-
-def parse_arguments():
-    """Parse command-line arguments, and return a Namespace object containing them."""
-    argparser = _set_arguments()
-    # Parse arguments into Namespace
-    args = argparser.parse_args()
-    return args
