@@ -1,14 +1,10 @@
-import argparse
 import os
-import textract
-import time
-#import filesystem
-# from filesystem import *
-#from filesystem import *
+import time # TODO - remove when done
 import utils.cli as cli
 import utils.filesystem as fs
 import utils.text as txt
 
+# TODO - remove this after testing
 # timing tool
 # t0 = time.time()
 # t1 = time.time()
@@ -25,10 +21,10 @@ if os.path.isfile(args.input):
     indir = os.path.dirname(infile)
     outdir = fs.set_outdir(args.output, indir)
 
-    # Extract text and write it to the output file
+    # Extract text
     text = txt.get_text(infile)
     
-    # Write to outfile if text has been extracted successfully
+    # If text has been extracted successfully (and infile was not empty)
     if text:
         outfile = fs.compose_unique_filepath(infile, outdir)
         try:

@@ -1,3 +1,4 @@
+import os
 import textract
 
 # TODO - maybe reorder functions, seems like it should work either way
@@ -7,8 +8,8 @@ def _process_text(text, _infile_extension):
     """Process extracted text and return it as a simple string."""
     # utf-8 is used here to handle different languages efficiently (https://stackoverflow.com/a/2438901)
     text = text.decode('utf-8')
-    # remove unnecessary trailing space caused by the form feed (\x0c, \f) character at the end of .pdf files
-    if _infile_extension == 'pdf' or _infile_extension == '.pdf':
+    # Remove unnecessary trailing space caused by the form feed (\x0c, \f) character at the end of .pdf files
+    if _infile_extension == '.pdf' or _infile_extension == 'pdf':
         text = text.strip()
     return text
 
@@ -21,7 +22,7 @@ def get_text(infile, _infile_extension=None):
     The caller should never set _infile_extension to anything in most cases, 
     unless they want to skip the prompt for input extension and the entirety of the input is of the same format.
     """
-    # If text is not extracted, the function will just return an empty string
+    # If text is not extracted or the infile is empty, the function will just return an empty string
     text = ''   
 
     try:
@@ -47,5 +48,9 @@ def get_text(infile, _infile_extension=None):
         text = get_text(infile, _infile_extension)
     # If no exceptions happened, format text adeguately
     else:
+        # Extract input file's extension unless it has already been specified
+        if not _infile_extension:
+            _infile_extension = os.path.splitext(infile)[1]
+
         text = _process_text(text, _infile_extension)
     return text

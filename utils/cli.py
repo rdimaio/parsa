@@ -1,6 +1,5 @@
 import argparse
 
-
 class _SmartFormatter(argparse.HelpFormatter):
     """Allows formatting in the CLI help menu.
     Called by beginning a string with R| in _set_arguments().
