@@ -37,9 +37,6 @@ def _set_arguments():
     argparser.add_argument('input', help=('input file or folder; if a folder is passed as input, '
     'parsa will scan every file inside it recursively (scanning subfolders as well)'))
 
-    # TODO - describe what the stats file will include
-    argparser.add_argument('--stats', '-s', nargs='?', help='output stats file')
-
     argparser.add_argument('--output', '-o', nargs='?', default=None, help=('R|folder where the output files '
     'will be stored. The default folder is: \n'
     '(a) the input file\'s parent folder, if the input is a file, or \n'
