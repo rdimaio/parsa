@@ -1,6 +1,9 @@
-import unittest
+import unittest, os, sys
+sys.path.append(os.path.abspath('..'))
 #from parsa.utils.filesystem import *
-import parsa.utils.filesystem as fs
+#from parsa.utils import filesystem as fs
+from parsa.utils import filesystem as fs
+
 
 class FileSystemTestCase(unittest.TestCase):
     def test_compose_unique_filepath(self):
