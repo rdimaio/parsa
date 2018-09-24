@@ -44,7 +44,6 @@ def compose_unique_filepath(infile, outdir):
     return outfile
 
 def get_filelist(indir):
-    # TODO - check this with a lot of files, because theoretically you're going through 2 for loops for each file and that might be inefficient (O(n) still)
     """Return list of files in the input directory, including the files in all subdirectories.""" 
     filelist = []
     # Cycle through all files in the directory recursively

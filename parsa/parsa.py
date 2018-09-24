@@ -1,14 +1,7 @@
 import os
-import time # TODO - remove when done
 import utils.cli as cli
 import utils.filesystem as fs
 import utils.text as txt
-
-# TODO - remove this after testing
-# timing tool
-# t0 = time.time()
-# t1 = time.time()
-#     print(t1-t0)
 
 # Get CLI arguments
 args = cli.parse_arguments()
