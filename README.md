@@ -6,3 +6,6 @@ Parsa is a [textract](https://github.com/deanmalmgren/textract)-based CLI multif
 ## Related projects
 - [xparsa](https://github.com/rdimaio/xparsa) - Expanded parsa, with statistics like word frequency
 - [xparsa-gui](https://github.com/rdimaio/xparsa-gui) - GUI for xparsa
+
+
+[![Build Status](https://travis-ci.com/rdimaio/parsa.svg?branch=master)](https://travis-ci.com/rdimaio/parsa)
