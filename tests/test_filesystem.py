@@ -1,4 +1,7 @@
-import unittest, os, sys
+import unittest
+import os
+import sys
+import tempfile
 
 sys.path.append(os.path.abspath('..'))
 from parsa.utils import filesystem as fs
