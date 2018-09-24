@@ -6,5 +6,4 @@ setup(name='Parsa',
       author='Riccardo Di Maio',
       author_email='rdimaio@protonmail.com',
       url='https://github.com/rdimaio/parsa',
-      packages=['distutils', 'distutils.command'],
      )
