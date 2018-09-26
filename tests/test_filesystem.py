@@ -29,6 +29,7 @@ class FileSystemTest(unittest.TestCase):
         # Work in a temporary directory
         # Python 2.x (mkdtemp() is used instead of TemporaryDirectory())
         if sys.version_info[0] < 3:
+            import shutil
             outdir = tempfile.mkdtemp()
             # Create a temporary file named 'foo.txt'
             existing_outfile = os.path.join(outdir, 'foo.txt')
@@ -37,7 +38,8 @@ class FileSystemTest(unittest.TestCase):
             # Remove the temporary file
             os.remove(existing_outfile)
             # Remove the temporary directory (mdktemp must be manually deleted)
-            os.remove(outdir)
+            # Source: https://stackoverflow.com/a/6129600
+            shutil.rmtree(outdir, ignore_errors=True)
         # Python 3.x
         else:
             with tempfile.TemporaryDirectory() as outdir:
