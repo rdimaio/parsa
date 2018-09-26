@@ -3,6 +3,9 @@ import os
 import sys
 import tempfile
 
+if sys.version_info[0] < 3:
+    from backports import tempfile
+
 sys.path.append(os.path.abspath('..'))
 from parsa.utils import filesystem as fs
 
@@ -21,7 +24,7 @@ class FileSystemTest(unittest.TestCase):
 
     # TODO - maybe create a class and setUp just for these where I'm making a folder with temp files inside
     # teardown too, so that the files don't persist between tests
-    def test_compose_unique_filepath_with_outfile_existing_in_outdir(self):
+    def test_compose_unique_filepath_with_existing_outfile_in_outdir(self):
         """Compose an output filepath for 'foo.pdf', with a file named 'foo.txt' in the output directory.
         Expected output: 'foo.pdf.txt'
         """
