@@ -3,8 +3,18 @@ import os
 import sys
 import tempfile
 
+# Needed for Python 2.x tests to close directories
+if sys.version_info[0] < 3:
+    import shutil
+
 sys.path.append(os.path.abspath('..'))
 from parsa.utils import filesystem as fs
+
+
+# TODO
+# test_compose_unique_filepath_no_conflicts_in_outdir: maybe create a temp dir in which to create the file,
+# instead of creating it in the /tmp/ folder (which might already have a file named foo.txt inside, because of other
+# programs in the systems)
 
 class FilepathCompositionTestCase(unittest.TestCase):
     """Base class for tests regarding compose_unique_filepath."""
@@ -69,7 +79,6 @@ class FilepathCompositionTest(FilepathCompositionTestCase):
         #   tempfile.mkdtemp() is used instead of tempfile.TemporaryDirectory()
         #   shutil.rmtree is used instead of os.remove to remove the temporary directory
         if sys.version_info[0] < 3:
-            import shutil
             # Work in a temporary directory
             outdir = tempfile.mkdtemp()
             # Create a temporary file named 'foo.txt'
@@ -101,7 +110,6 @@ class FilepathCompositionTest(FilepathCompositionTestCase):
         """
         # Python 2.x
         if sys.version_info[0] < 3:
-            import shutil
             # Work in a temporary directory
             outdir = tempfile.mkdtemp()
             # Create two temporary files named 'foo.txt' and 'foo.pdf.txt'
@@ -136,7 +144,6 @@ class FilepathCompositionTest(FilepathCompositionTestCase):
         """
         # Python 2.x
         if sys.version_info[0] < 3:
-            import shutil
             # Work in a temporary directory
             outdir = tempfile.mkdtemp()
             # Create the temp files
@@ -165,7 +172,6 @@ class FilepathCompositionTest(FilepathCompositionTestCase):
             with tempfile.TemporaryDirectory() as outdir:
                 # Create the temp files
                 conflicts = self.generate_conflicts(10, outdir)
-                # AFAIK, there is no completely safe way of opening a list of files using a with statement in Python 2.x
                 with open(conflicts[0], 'w'), \
                      open (conflicts[1], 'w'), \
                      open (conflicts[2], 'w'), \
@@ -187,8 +193,115 @@ class FilepathCompositionTest(FilepathCompositionTestCase):
 
 class FileSystemTest(unittest.TestCase):
 
-    def test_get_filelist(self):
-        return True
+    def test_get_filelist_empty_folder(self):
+        """List the files of an empty directory.
+        It is necessary to make a temporary directory inside the folder obtained via tempfile.gettempdir(),
+        otherwise files that are already in the temp folder (created by other programs in the system) will pollute
+        the test and fill the list.
+        Expected output: empty list []
+        """
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+            filelist = fs.get_filelist(indir)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+                filelist = fs.get_filelist(indir)
+        # Empty lists evaluate to false
+        self.assertFalse(filelist)
+
+    def test_get_filelist_one_file_in_folder(self):
+        """List the files of a directory with only one file inside it.
+        Expected output: empty list []
+        """
+        files_created = []
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+            file1 = tempfile.NamedTemporaryFile(dir=indir)
+            files_created.append(file1.name)
+            filelist = fs.get_filelist(indir)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+                # delete is set to False to avoid FileNotFoundError at the end of the test
+                file1 = tempfile.NamedTemporaryFile(dir=indir, delete=False)
+                files_created.append(file1.name)
+                filelist = fs.get_filelist(indir)
+                # Remove the temporary file manually as a precaution 
+                # (the with statement automatically deletes the folder)
+                os.remove(file1.name)
+        # Empty lists evaluate to false
+        self.assertEqual(files_created, filelist)
+
+    # TODO:
+    # cases:
+    # one file
+    # two files
+    # ten files
+    # ten files in various subdirectories
+    #def test_get_filelist_no_files(self):
+    #    """Get the list of files of a temporary directory.
+    #    The expected output depends on the names of the temporary files.
+    #    """
+    #    # Python 2.x
+    #    if sys.version_info[0] < 3:
+    #        import shutil
+    #        # Work in a temporary directory
+    #        outdir = tempfile.mkdtemp()
+    #        # Create the temp files
+    #        conflicts = self.generate_conflicts(10, outdir)
+    #        # AFAIK, there is no completely safe way of opening a list of files using a with statement in Python 2.x
+    #        with open(conflicts[0], 'w'), \
+    #             open (conflicts[1], 'w'), \
+    #             open (conflicts[2], 'w'), \
+    #             open (conflicts[3], 'w'), \
+    #             open (conflicts[4], 'w'), \
+    #             open (conflicts[5], 'w'), \
+    #             open (conflicts[6], 'w'), \
+    #             open (conflicts[7], 'w'), \
+    #             open (conflicts[8], 'w'), \
+    #             open (conflicts[9], 'w'):
+    #            outfile = fs.compose_unique_filepath(self.infile, outdir)
+    #        # Remove the temporary files
+    #        for conflict in conflicts:
+    #            os.remove(conflict)
+    #        # Remove the temporary directory (mdktemp must be manually deleted)
+    #        # shutil.rmtree is used instead of os.remove to avoid OSError
+    #        shutil.rmtree(outdir, ignore_errors=True)
+    #    # Python 3.x
+    #    else:
+    #        # Work in a temporary directory
+    #        with tempfile.TemporaryDirectory() as outdir:
+    #            # Create the temp files
+    #            conflicts = self.generate_conflicts(10, outdir)
+    #            with open(conflicts[0], 'w'), \
+    #                 open (conflicts[1], 'w'), \
+    #                 open (conflicts[2], 'w'), \
+    #                 open (conflicts[3], 'w'), \
+    #                 open (conflicts[4], 'w'), \
+    #                 open (conflicts[5], 'w'), \
+    #                 open (conflicts[6], 'w'), \
+    #                 open (conflicts[7], 'w'), \
+    #                 open (conflicts[8], 'w'), \
+    #                 open (conflicts[9], 'w'):
+    #                outfile = fs.compose_unique_filepath(self.infile, outdir)
+    #            # Remove the temporary files
+    #            for conflict in conflicts:
+    #                os.remove(conflict)
+    #    expected_outfile = os.path.join(outdir, 'foo.pdf10.txt')
+    #    self.assertEqual(outfile, expected_outfile)
 
     def test_set_outdir_with_outdir_provided(self):
         args_outdir = 'foo'
