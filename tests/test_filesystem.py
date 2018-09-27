@@ -15,6 +15,9 @@ from parsa.utils import filesystem as fs
 # test_compose_unique_filepath_no_conflicts_in_outdir: maybe create a temp dir in which to create the file,
 # instead of creating it in the /tmp/ folder (which might already have a file named foo.txt inside, because of other
 # programs in the systems)
+#
+# TODO
+# maybe avoid deleting files as a precaution, since folders are deleted recursively - might save some time
 
 class FilepathCompositionTestCase(unittest.TestCase):
     """Base class for tests regarding compose_unique_filepath."""
@@ -283,92 +286,121 @@ class FileSystemTest(unittest.TestCase):
         # Typecast both lists to sets to make an unordered comparison
         self.assertEqual(set(files_created), set(filelist))
 
-    def test_get_filelist_test(self):
-        """List the files of a directory with two files inside it.
-        Expected output: list with two strings, equal to the filepaths of the temporary files created
+    def test_get_filelist_ten_files_in_folder(self):
+        """List the files of a directory with 10 files inside it.
+        Expected output: list with 10 strings, equal to the filepaths of the temporary files created
         """
         files_created = []
         # Python 2.x
         if sys.version_info[0] < 3:
             # Work in a temporary directory
             indir = tempfile.mkdtemp()
-        else:
-            indir = tempfile.TemporaryDirectory()
-
-        with indir:  
-            for i in range(0, 2):
+            for i in range(0, 10):
                 # delete is set to False to avoid OSError at the end of the test
-                file_handler = tempfile.NamedTemporaryFile(dir=indir.name, delete=False)
+                file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
                 files_created.append(file_handler.name)
-            filelist = fs.get_filelist(indir.name)
+            filelist = fs.get_filelist(indir)
             # Remove the temporary files manually as a precaution 
             for filepath in files_created:
                 os.remove(filepath)
             # Remove the temporary directory (mdktemp must be manually deleted)
             # shutil.rmtree is used instead of os.remove to avoid OSError
-        if sys.version_info[0] < 3:
             shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+                for i in range(0, 10):
+                    # delete is set to False to avoid OSError at the end of the test
+                    file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
+                    files_created.append(file_handler.name)
+                filelist = fs.get_filelist(indir)
+                # Remove the temporary file manually as a precaution 
+                # (the with statement automatically deletes the folder)
+                for filepath in files_created:
+                    os.remove(filepath)
         # Typecast both lists to sets to make an unordered comparison
         self.assertEqual(set(files_created), set(filelist))
 
+    def test_get_filelist_1000_files_in_folder(self):
+        """List the files of a directory with 1000 files inside it.
+        Expected output: list with 1000 strings, equal to the filepaths of the temporary files created
+        """
+        files_created = []
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+            for i in range(0, 1000):
+                # delete is set to False to avoid OSError at the end of the test
+                file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
+                files_created.append(file_handler.name)
+            filelist = fs.get_filelist(indir)
+            # Remove the temporary files manually as a precaution 
+            for filepath in files_created:
+                os.remove(filepath)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+                for i in range(0, 1000):
+                    # delete is set to False to avoid OSError at the end of the test
+                    file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
+                    files_created.append(file_handler.name)
+                filelist = fs.get_filelist(indir)
+                # Remove the temporary file manually as a precaution 
+                # (the with statement automatically deletes the folder)
+                for filepath in files_created:
+                    os.remove(filepath)
+        # Typecast both lists to sets to make an unordered comparison
+        self.assertEqual(set(files_created), set(filelist))
 
+    def test_get_filelist_ten_files_in_one_layer_of_subfolders(self):
+        """List the files of a directory with 10 files inside it, spread across one layer of subfolders.
+        Expected output: list with 10 strings, equal to the filepaths of the temporary files created
+        """
+        files_created = []
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+            for i in range(0, 10):
+                subdir = tempfile.mkdtemp(dir=indir)
+                file_handler = tempfile.NamedTemporaryFile(dir=subdir, delete=False)
+                files_created.append(file_handler.name)
+            filelist = fs.get_filelist(indir)
+            # Remove the temporary files manually as a precaution 
+            for filepath in files_created:
+                os.remove(filepath)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+                # Create ten temporary subdirectories inside the temporary directory
+                for i in range(0, 10):
+                    subdir = tempfile.mkdtemp(dir=indir)
+                    file_handler = tempfile.NamedTemporaryFile(dir=subdir, delete=False)
+                    files_created.append(file_handler.name)
+                filelist = fs.get_filelist(indir)
+                # Remove the temporary file manually as a precaution 
+                # (the with statement automatically deletes a TemporaryDirectory type of folder)
+                for filepath in files_created:
+                    os.remove(filepath)
+        # Typecast both lists to sets to make an unordered comparison
+        self.assertEqual(set(files_created), set(filelist))
+        
     # TODO:
     # cases:
-    # two files
-    # ten files
-    # ten files in various subdirectories
-    #def test_get_filelist_no_files(self):
-    #    """Get the list of files of a temporary directory.
-    #    The expected output depends on the names of the temporary files.
-    #    """
-    #    # Python 2.x
-    #    if sys.version_info[0] < 3:
-    #        import shutil
-    #        # Work in a temporary directory
-    #        outdir = tempfile.mkdtemp()
-    #        # Create the temp files
-    #        conflicts = self.generate_conflicts(10, outdir)
-    #        # AFAIK, there is no completely safe way of opening a list of files using a with statement in Python 2.x
-    #        with open(conflicts[0], 'w'), \
-    #             open (conflicts[1], 'w'), \
-    #             open (conflicts[2], 'w'), \
-    #             open (conflicts[3], 'w'), \
-    #             open (conflicts[4], 'w'), \
-    #             open (conflicts[5], 'w'), \
-    #             open (conflicts[6], 'w'), \
-    #             open (conflicts[7], 'w'), \
-    #             open (conflicts[8], 'w'), \
-    #             open (conflicts[9], 'w'):
-    #            outfile = fs.compose_unique_filepath(self.infile, outdir)
-    #        # Remove the temporary files
-    #        for conflict in conflicts:
-    #            os.remove(conflict)
-    #        # Remove the temporary directory (mdktemp must be manually deleted)
-    #        # shutil.rmtree is used instead of os.remove to avoid OSError
-    #        shutil.rmtree(outdir, ignore_errors=True)
-    #    # Python 3.x
-    #    else:
-    #        # Work in a temporary directory
-    #        with tempfile.TemporaryDirectory() as outdir:
-    #            # Create the temp files
-    #            conflicts = self.generate_conflicts(10, outdir)
-    #            with open(conflicts[0], 'w'), \
-    #                 open (conflicts[1], 'w'), \
-    #                 open (conflicts[2], 'w'), \
-    #                 open (conflicts[3], 'w'), \
-    #                 open (conflicts[4], 'w'), \
-    #                 open (conflicts[5], 'w'), \
-    #                 open (conflicts[6], 'w'), \
-    #                 open (conflicts[7], 'w'), \
-    #                 open (conflicts[8], 'w'), \
-    #                 open (conflicts[9], 'w'):
-    #                outfile = fs.compose_unique_filepath(self.infile, outdir)
-    #            # Remove the temporary files
-    #            for conflict in conflicts:
-    #                os.remove(conflict)
-    #    expected_outfile = os.path.join(outdir, 'foo.pdf10.txt')
-    #    self.assertEqual(outfile, expected_outfile)
-
+    # ten file per subfolder in one layer of subdirectories
+    # ten files in two layers of subdirectories
+    # one thousand files in one thousand layers of subdirectories
+ 
     def test_set_outdir_with_outdir_provided(self):
         args_outdir = 'foo'
         indir = 'bar'
