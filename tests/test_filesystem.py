@@ -230,7 +230,7 @@ class FileSystemTest(unittest.TestCase):
             files_created.append(file1.name)
             filelist = fs.get_filelist(indir)
             # Remove the temporary file manually as a precaution 
-            os.remove(file1)
+            os.remove(file1.name)
             # Remove the temporary directory (mdktemp must be manually deleted)
             # shutil.rmtree is used instead of os.remove to avoid OSError
             shutil.rmtree(indir, ignore_errors=True)
