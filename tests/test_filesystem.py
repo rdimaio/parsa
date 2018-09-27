@@ -218,16 +218,19 @@ class FileSystemTest(unittest.TestCase):
 
     def test_get_filelist_one_file_in_folder(self):
         """List the files of a directory with only one file inside it.
-        Expected output: empty list []
+        Expected output: list with one string, equal to the filepath of the temporary file created
         """
         files_created = []
         # Python 2.x
         if sys.version_info[0] < 3:
             # Work in a temporary directory
             indir = tempfile.mkdtemp()
-            file1 = tempfile.NamedTemporaryFile(dir=indir)
+            # delete is set to False to avoid OSError at the end of the test
+            file1 = tempfile.NamedTemporaryFile(dir=indir, delete=False)
             files_created.append(file1.name)
             filelist = fs.get_filelist(indir)
+            # Remove the temporary file manually as a precaution 
+            os.remove(file1)
             # Remove the temporary directory (mdktemp must be manually deleted)
             # shutil.rmtree is used instead of os.remove to avoid OSError
             shutil.rmtree(indir, ignore_errors=True)
