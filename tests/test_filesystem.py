@@ -245,12 +245,75 @@ class FileSystemTest(unittest.TestCase):
                 # Remove the temporary file manually as a precaution 
                 # (the with statement automatically deletes the folder)
                 os.remove(file1.name)
-        # Empty lists evaluate to false
         self.assertEqual(files_created, filelist)
+    
+    def test_get_filelist_two_files_in_folder(self):
+        """List the files of a directory with two files inside it.
+        Expected output: list with two strings, equal to the filepaths of the temporary files created
+        """
+        files_created = []
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+            for i in range(0, 2):
+                # delete is set to False to avoid OSError at the end of the test
+                file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
+                files_created.append(file_handler.name)
+            filelist = fs.get_filelist(indir)
+            # Remove the temporary files manually as a precaution 
+            for filepath in files_created:
+                os.remove(filepath)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+                for i in range(0, 2):
+                    # delete is set to False to avoid OSError at the end of the test
+                    file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
+                    files_created.append(file_handler.name)
+                filelist = fs.get_filelist(indir)
+                # Remove the temporary file manually as a precaution 
+                # (the with statement automatically deletes the folder)
+                for filepath in files_created:
+                    os.remove(filepath)
+        # Typecast both lists to sets to make an unordered comparison
+        self.assertEqual(set(files_created), set(filelist))
+
+    def test_get_filelist_test(self):
+        """List the files of a directory with two files inside it.
+        Expected output: list with two strings, equal to the filepaths of the temporary files created
+        """
+        files_created = []
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+        else:
+            indir = tempfile.TemporaryDirectory()
+
+        with indir:  
+            for i in range(0, 2):
+                # delete is set to False to avoid OSError at the end of the test
+                file_handler = tempfile.NamedTemporaryFile(dir=indir.name, delete=False)
+                files_created.append(file_handler.name)
+            filelist = fs.get_filelist(indir.name)
+            # Remove the temporary files manually as a precaution 
+            for filepath in files_created:
+                os.remove(filepath)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+        if sys.version_info[0] < 3:
+            shutil.rmtree(indir, ignore_errors=True)
+        # Typecast both lists to sets to make an unordered comparison
+        self.assertEqual(set(files_created), set(filelist))
+
 
     # TODO:
     # cases:
-    # one file
     # two files
     # ten files
     # ten files in various subdirectories
