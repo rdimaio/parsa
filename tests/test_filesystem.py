@@ -219,7 +219,7 @@ class FileSystemTest(unittest.TestCase):
         # Empty lists evaluate to false
         self.assertFalse(filelist)
 
-    def test_get_filelist_one_file_in_folder(self):
+    def test_get_filelist_1_file_in_folder(self):
         """List the files of a directory with only one file inside it.
         Expected output: list with one string, equal to the filepath of the temporary file created
         """
@@ -250,7 +250,7 @@ class FileSystemTest(unittest.TestCase):
                 os.remove(file1.name)
         self.assertEqual(files_created, filelist)
     
-    def test_get_filelist_two_files_in_folder(self):
+    def test_get_filelist_2_files_in_folder(self):
         """List the files of a directory with two files inside it.
         Expected output: list with two strings, equal to the filepaths of the temporary files created
         """
@@ -259,7 +259,7 @@ class FileSystemTest(unittest.TestCase):
         if sys.version_info[0] < 3:
             # Work in a temporary directory
             indir = tempfile.mkdtemp()
-            for i in range(0, 2):
+            for _ in range(2):
                 # delete is set to False to avoid OSError at the end of the test
                 file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
                 files_created.append(file_handler.name)
@@ -274,7 +274,7 @@ class FileSystemTest(unittest.TestCase):
         else:
             # Work in a temporary directory
             with tempfile.TemporaryDirectory() as indir:
-                for i in range(0, 2):
+                for _ in range(2):
                     # delete is set to False to avoid OSError at the end of the test
                     file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
                     files_created.append(file_handler.name)
@@ -286,7 +286,7 @@ class FileSystemTest(unittest.TestCase):
         # Typecast both lists to sets to make an unordered comparison
         self.assertEqual(set(files_created), set(filelist))
 
-    def test_get_filelist_ten_files_in_folder(self):
+    def test_get_filelist_10_files_in_folder(self):
         """List the files of a directory with 10 files inside it.
         Expected output: list with 10 strings, equal to the filepaths of the temporary files created
         """
@@ -295,7 +295,7 @@ class FileSystemTest(unittest.TestCase):
         if sys.version_info[0] < 3:
             # Work in a temporary directory
             indir = tempfile.mkdtemp()
-            for i in range(0, 10):
+            for _ in range(10):
                 # delete is set to False to avoid OSError at the end of the test
                 file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
                 files_created.append(file_handler.name)
@@ -310,7 +310,7 @@ class FileSystemTest(unittest.TestCase):
         else:
             # Work in a temporary directory
             with tempfile.TemporaryDirectory() as indir:
-                for i in range(0, 10):
+                for _ in range(10):
                     # delete is set to False to avoid OSError at the end of the test
                     file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
                     files_created.append(file_handler.name)
@@ -331,7 +331,7 @@ class FileSystemTest(unittest.TestCase):
         if sys.version_info[0] < 3:
             # Work in a temporary directory
             indir = tempfile.mkdtemp()
-            for i in range(0, 1000):
+            for _ in range(1000):
                 # delete is set to False to avoid OSError at the end of the test
                 file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
                 files_created.append(file_handler.name)
@@ -346,7 +346,7 @@ class FileSystemTest(unittest.TestCase):
         else:
             # Work in a temporary directory
             with tempfile.TemporaryDirectory() as indir:
-                for i in range(0, 1000):
+                for _ in range(1000):
                     # delete is set to False to avoid OSError at the end of the test
                     file_handler = tempfile.NamedTemporaryFile(dir=indir, delete=False)
                     files_created.append(file_handler.name)
@@ -358,8 +358,8 @@ class FileSystemTest(unittest.TestCase):
         # Typecast both lists to sets to make an unordered comparison
         self.assertEqual(set(files_created), set(filelist))
 
-    def test_get_filelist_ten_files_in_one_layer_of_subfolders(self):
-        """List the files of a directory with 10 files inside it, spread across one layer of subfolders.
+    def test_get_filelist_10_files_in_1_layer_of_subfolders(self):
+        """List the files of a directory with 10 files inside it, spread across one layer of 10 subfolders.
         Expected output: list with 10 strings, equal to the filepaths of the temporary files created
         """
         files_created = []
@@ -367,7 +367,7 @@ class FileSystemTest(unittest.TestCase):
         if sys.version_info[0] < 3:
             # Work in a temporary directory
             indir = tempfile.mkdtemp()
-            for i in range(0, 10):
+            for _ in range(10):
                 subdir = tempfile.mkdtemp(dir=indir)
                 file_handler = tempfile.NamedTemporaryFile(dir=subdir, delete=False)
                 files_created.append(file_handler.name)
@@ -383,7 +383,7 @@ class FileSystemTest(unittest.TestCase):
             # Work in a temporary directory
             with tempfile.TemporaryDirectory() as indir:
                 # Create ten temporary subdirectories inside the temporary directory
-                for i in range(0, 10):
+                for _ in range(10):
                     subdir = tempfile.mkdtemp(dir=indir)
                     file_handler = tempfile.NamedTemporaryFile(dir=subdir, delete=False)
                     files_created.append(file_handler.name)
@@ -395,12 +395,252 @@ class FileSystemTest(unittest.TestCase):
         # Typecast both lists to sets to make an unordered comparison
         self.assertEqual(set(files_created), set(filelist))
         
-    # TODO:
-    # cases:
-    # ten file per subfolder in one layer of subdirectories
-    # ten files in two layers of subdirectories
-    # one thousand files in one thousand layers of subdirectories
- 
+    def test_get_filelist_100_files_in_1_layer_of_subfolders_10_files_each(self):
+        """List the files of a directory with 100 files inside it, spread across 1 layer of subfolders of 10 files each.
+        Expected output: list with 100 strings, equal to the filepaths of the temporary files created
+        """
+        files_created = []
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+            # Create ten temporary subdirectories
+            for _ in range(10):
+                subdir = tempfile.mkdtemp(dir=indir)
+                # Create ten temporary files inside each temporary subdirectory
+                for _ in range(10):
+                    file_handler = tempfile.NamedTemporaryFile(dir=subdir, delete=False)
+                    files_created.append(file_handler.name)
+            filelist = fs.get_filelist(indir)
+            # Remove the temporary files manually as a precaution 
+            for filepath in files_created:
+                os.remove(filepath)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+                # Create ten temporary subdirectories inside the temporary directory
+                for _ in range(10):
+                    subdir = tempfile.mkdtemp(dir=indir)
+                    # Create ten temporary files inside each temporary subdirectory
+                    for _ in range(10):
+                        file_handler = tempfile.NamedTemporaryFile(dir=subdir, delete=False)
+                        files_created.append(file_handler.name)
+                filelist = fs.get_filelist(indir)
+                # Remove the temporary file manually as a precaution 
+                # (the with statement automatically deletes a TemporaryDirectory type of folder)
+                for filepath in files_created:
+                    os.remove(filepath)
+        # Typecast both lists to sets to make an unordered comparison
+        self.assertEqual(set(files_created), set(filelist))
+
+    def test_get_filelist_10000_files_in_2_layers_of_subfolders_99_files_each(self):
+        """List the files of a directory with 10000 files inside it, spread across 2 layer of subfolders of 99 files each.
+        Expected output: list with 10000 strings, equal to the filepaths of the temporary files created
+        """
+        files_created = []
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+            # Create ten temporary subdirectories inside the temporary directory
+            for _ in range(10):
+                subdir = tempfile.mkdtemp(dir=indir)
+                # Create ten temporary files inside each temporary subdirectory
+                for _ in range(10):
+                    file_handler = tempfile.NamedTemporaryFile(dir=subdir, delete=False)
+                    files_created.append(file_handler.name)
+                # Create ten temporary subsubdirectories
+                for _ in range(10):
+                    subsubdir = tempfile.mkdtemp(dir=subdir)
+                    # Create ten temporary files inside each temporary subsubdirectory
+                    for _ in range(99):
+                        file_handler = tempfile.NamedTemporaryFile(dir=subsubdir, delete=False)
+                        files_created.append(file_handler.name)
+            filelist = fs.get_filelist(indir)
+            # Remove the temporary files manually as a precaution 
+            for filepath in files_created:
+                os.remove(filepath)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+                # Create ten temporary subdirectories inside the temporary directory
+                for _ in range(10):
+                    subdir = tempfile.mkdtemp(dir=indir)
+                    # Create ten temporary files inside each temporary subdirectory
+                    for _ in range(10):
+                        file_handler = tempfile.NamedTemporaryFile(dir=subdir, delete=False)
+                        files_created.append(file_handler.name)
+                    # Create ten temporary subsubdirectories
+                    for _ in range(10):
+                        subsubdir = tempfile.mkdtemp(dir=subdir)
+                        # Create ten temporary files inside each temporary subsubdirectory
+                        for _ in range(99):
+                            file_handler = tempfile.NamedTemporaryFile(dir=subsubdir, delete=False)
+                            files_created.append(file_handler.name)
+                filelist = fs.get_filelist(indir)
+                # Remove the temporary file manually as a precaution 
+                # (the with statement automatically deletes a TemporaryDirectory type of folder)
+                for filepath in files_created:
+                    os.remove(filepath)
+        # Typecast both lists to sets to make an unordered comparison
+        self.assertEqual(set(files_created), set(filelist))
+
+    def test_get_filelist_1000_files_in_10_layers_of_subfolders_10_files_each(self):
+        """List the files of a directory with 1000 files inside it, spread across 10 layer of subfolders of 10 files each.
+        Expected output: list with 1000 strings, equal to the filepaths of the temporary files created
+        """
+        files_created = []
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+            # Create 10 base subdirectories
+            for _ in range(10):
+                subdirs = []
+                subdir_handler = tempfile.mkdtemp(dir=indir)
+                subdirs.append(subdir_handler)
+                # Create ten temporary files inside each base subdirectory
+                for _ in range(10):
+                    file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
+                    files_created.append(file_handler.name)
+                # In each base subdirectory, create 9 layers of subdirectories (10 layers total)
+                for i in range(9):
+                    # The first subdir is created inside the base subdirectory;
+                    # each subsequent subdir is created inside the previous one.
+                    # The variable i is equal to the current layer - 1
+                    subdir_handler = tempfile.mkdtemp(dir=subdirs[i])
+                    subdirs.append(subdir_handler)
+                    # Create ten temporary files inside each layer
+                    for _ in range(10):
+                        file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
+                        files_created.append(file_handler.name)
+
+            filelist = fs.get_filelist(indir)
+            # Remove the temporary files manually as a precaution 
+            for filepath in files_created:
+                os.remove(filepath)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+
+                # Create 10 base subdirectories
+                for _ in range(10):
+                    subdirs = []
+                    subdir_handler = tempfile.mkdtemp(dir=indir)
+                    subdirs.append(subdir_handler)
+
+                    # Create ten temporary files inside each base subdirectory
+                    for _ in range(10):
+                        file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
+                        files_created.append(file_handler.name)
+
+                    # In each base subdirectory, create 9 layers of subdirectories (10 layers total)
+                    for i in range(9):
+                        # The first subdir is created inside the base subdirectory;
+                        # each subsequent subdir is created inside the previous one.
+                        # The variable i is equal to the current layer - 1
+                        subdir_handler = tempfile.mkdtemp(dir=subdirs[i])
+                        subdirs.append(subdir_handler)
+
+                        # Create ten temporary files inside each layer
+                        for _ in range(10):
+                            file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
+                            files_created.append(file_handler.name)
+
+                filelist = fs.get_filelist(indir)
+                # Remove the temporary file manually as a precaution 
+                # (the with statement automatically deletes a TemporaryDirectory type of folder)
+                for filepath in files_created:
+                    os.remove(filepath)
+        # Typecast both lists to sets to make an unordered comparison
+        self.assertEqual(set(files_created), set(filelist))
+
+    def test_get_filelist_10000_files_in_100_layers_of_subfolders_10_files_each(self):
+        """List the files of a directory with 10000 files inside it, spread across 100 layer of subfolders of 10 files each.
+        Expected output: list with 10000 strings, equal to the filepaths of the temporary files created
+        """
+        files_created = []
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            indir = tempfile.mkdtemp()
+            # Create 10 base subdirectories
+            for _ in range(10):
+                subdirs = []
+                subdir_handler = tempfile.mkdtemp(dir=indir)
+                subdirs.append(subdir_handler)
+                # Create ten temporary files inside each base subdirectory
+                for _ in range(10):
+                    file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
+                    files_created.append(file_handler.name)
+                # In each base subdirectory, create 9 layers of subdirectories (10 layers total)
+                for i in range(99):
+                    # The first subdir is created inside the base subdirectory;
+                    # each subsequent subdir is created inside the previous one.
+                    # The variable i is equal to the current layer - 1
+                    subdir_handler = tempfile.mkdtemp(dir=subdirs[i])
+                    subdirs.append(subdir_handler)
+                    # Create ten temporary files inside each layer
+                    for _ in range(10):
+                        file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
+                        files_created.append(file_handler.name)
+
+            filelist = fs.get_filelist(indir)
+            # Remove the temporary files manually as a precaution 
+            for filepath in files_created:
+                os.remove(filepath)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(indir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as indir:
+
+                # Create 10 base subdirectories
+                for _ in range(10):
+                    subdirs = []
+                    subdir_handler = tempfile.mkdtemp(dir=indir)
+                    subdirs.append(subdir_handler)
+
+                    # Create ten temporary files inside each base subdirectory
+                    for _ in range(10):
+                        file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
+                        files_created.append(file_handler.name)
+
+                    # In each base subdirectory, create 9 layers of subdirectories (10 layers total)
+                    for i in range(99):
+                        # The first subdir is created inside the base subdirectory;
+                        # each subsequent subdir is created inside the previous one.
+                        # The variable i is equal to the current layer - 1
+                        subdir_handler = tempfile.mkdtemp(dir=subdirs[i])
+                        subdirs.append(subdir_handler)
+
+                        # Create ten temporary files inside each layer
+                        for _ in range(10):
+                            file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
+                            files_created.append(file_handler.name)
+
+                filelist = fs.get_filelist(indir)
+                # Remove the temporary file manually as a precaution 
+                # (the with statement automatically deletes a TemporaryDirectory type of folder)
+                for filepath in files_created:
+                    os.remove(filepath)
+        # Typecast both lists to sets to make an unordered comparison
+        self.assertEqual(set(files_created), set(filelist))
+
     def test_set_outdir_with_outdir_provided(self):
         args_outdir = 'foo'
         indir = 'bar'
