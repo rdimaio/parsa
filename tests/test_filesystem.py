@@ -1,3 +1,27 @@
+"""Tests for utils/filesystem.py.
+Tests:
+    compose_unique_filepath:
+        no_conflicts_in_outdir
+        one_conflict_in_outdir
+        two_conflicts_in_outdir
+        ten_conflicts_in_outdir
+    
+    get_filelist:
+        1_file_in_folder
+        2_files_in_folder
+        10_files_in_folder
+        1000_files_in_folder
+        10_files_in_1_layer_of_subfolders
+        100_files_in_1_layer_of_subfolders_10_files_each
+        10000_files_in_2_layers_of_subfolders_99_files_each
+        1000_files_in_10_layers_of_subfolders_10_files_each
+        10000_files_in_100_layers_of_subfolders_10_files_each
+    
+    set_outdir:
+        with_outdir_provided
+        no_outdir_provided
+"""
+
 import unittest
 import os
 import sys
@@ -456,7 +480,7 @@ class FileSystemTest(unittest.TestCase):
                 # Create ten temporary subsubdirectories
                 for _ in range(10):
                     subsubdir = tempfile.mkdtemp(dir=subdir)
-                    # Create ten temporary files inside each temporary subsubdirectory
+                    # Create 99 temporary files inside each temporary subsubdirectory
                     for _ in range(99):
                         file_handler = tempfile.NamedTemporaryFile(dir=subsubdir, delete=False)
                         files_created.append(file_handler.name)
@@ -481,7 +505,7 @@ class FileSystemTest(unittest.TestCase):
                     # Create ten temporary subsubdirectories
                     for _ in range(10):
                         subsubdir = tempfile.mkdtemp(dir=subdir)
-                        # Create ten temporary files inside each temporary subsubdirectory
+                        # Create 99 temporary files inside each temporary subsubdirectory
                         for _ in range(99):
                             file_handler = tempfile.NamedTemporaryFile(dir=subsubdir, delete=False)
                             files_created.append(file_handler.name)
@@ -493,9 +517,9 @@ class FileSystemTest(unittest.TestCase):
         # Typecast both lists to sets to make an unordered comparison
         self.assertEqual(set(files_created), set(filelist))
 
-    def test_get_filelist_1000_files_in_10_layers_of_subfolders_10_files_each(self):
-        """List the files of a directory with 1000 files inside it, spread across 10 layer of subfolders of 10 files each.
-        Expected output: list with 1000 strings, equal to the filepaths of the temporary files created
+    def test_get_filelist_10000_files_in_10_layers_of_subfolders_10_files_each(self):
+        """List the files of a directory with 10000 files inside it, spread across 10 layer of subfolders of 100 files each.
+        Expected output: list with 10000 strings, equal to the filepaths of the temporary files created
         """
         files_created = []
         # Python 2.x
@@ -507,8 +531,8 @@ class FileSystemTest(unittest.TestCase):
                 subdirs = []
                 subdir_handler = tempfile.mkdtemp(dir=indir)
                 subdirs.append(subdir_handler)
-                # Create ten temporary files inside each base subdirectory
-                for _ in range(10):
+                # Create 100 temporary files inside each base subdirectory
+                for _ in range(100):
                     file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
                     files_created.append(file_handler.name)
                 # In each base subdirectory, create 9 layers of subdirectories (10 layers total)
@@ -518,8 +542,8 @@ class FileSystemTest(unittest.TestCase):
                     # The variable i is equal to the current layer - 1
                     subdir_handler = tempfile.mkdtemp(dir=subdirs[i])
                     subdirs.append(subdir_handler)
-                    # Create ten temporary files inside each layer
-                    for _ in range(10):
+                    # Create 100 temporary files inside each layer
+                    for _ in range(100):
                         file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
                         files_created.append(file_handler.name)
 
@@ -541,8 +565,8 @@ class FileSystemTest(unittest.TestCase):
                     subdir_handler = tempfile.mkdtemp(dir=indir)
                     subdirs.append(subdir_handler)
 
-                    # Create ten temporary files inside each base subdirectory
-                    for _ in range(10):
+                    # Create 100 temporary files inside each base subdirectory
+                    for _ in range(100):
                         file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
                         files_created.append(file_handler.name)
 
@@ -554,8 +578,8 @@ class FileSystemTest(unittest.TestCase):
                         subdir_handler = tempfile.mkdtemp(dir=subdirs[i])
                         subdirs.append(subdir_handler)
 
-                        # Create ten temporary files inside each layer
-                        for _ in range(10):
+                        # Create 100 temporary files inside each layer
+                        for _ in range(100):
                             file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
                             files_created.append(file_handler.name)
 
@@ -585,7 +609,7 @@ class FileSystemTest(unittest.TestCase):
                 for _ in range(10):
                     file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
                     files_created.append(file_handler.name)
-                # In each base subdirectory, create 9 layers of subdirectories (10 layers total)
+                # In each base subdirectory, create 99 layers of subdirectories (10 layers total)
                 for i in range(99):
                     # The first subdir is created inside the base subdirectory;
                     # each subsequent subdir is created inside the previous one.
@@ -620,7 +644,7 @@ class FileSystemTest(unittest.TestCase):
                         file_handler = tempfile.NamedTemporaryFile(dir=subdir_handler, delete=False)
                         files_created.append(file_handler.name)
 
-                    # In each base subdirectory, create 9 layers of subdirectories (10 layers total)
+                    # In each base subdirectory, create 99 layers of subdirectories (10 layers total)
                     for i in range(99):
                         # The first subdir is created inside the base subdirectory;
                         # each subsequent subdir is created inside the previous one.
