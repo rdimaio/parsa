@@ -3,7 +3,7 @@ Tests:
     get_text:
         base tests for each format are not tested here, as they are already tested in textract's library
         (https://github.com/deanmalmgren/textract/tree/master/tests)
-
+        
         empty_file
         extension_not_supported
         no_extension
