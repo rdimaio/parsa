@@ -20,6 +20,10 @@ Tests:
     set_outdir:
         with_outdir_provided
         no_outdir_provided
+
+    write_str_to_file:
+        basic test
+        outfile_exists
 """
 
 import unittest
@@ -679,4 +683,30 @@ class FileSystemTest(unittest.TestCase):
         self.assertEqual(outdir, indir)
     
     def test_write_str_to_file(self):
-        return True
+        expected_text = 'test'
+        # Python 2.x
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            outdir = tempfile.mkdtemp()
+            outfile = os.path.join(outdir, 'foo.txt')
+            fs.write_str_to_file(expected_text, outfile)
+            with open(outfile, 'r') as f_out:
+                actual_text = f_out.read()
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(outdir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as outdir:
+                outfile = os.path.join(outdir, 'foo.txt')
+                fs.write_str_to_file(expected_text, outfile)
+                with open(outfile, 'r') as f_out:
+                    actual_text = f_out.read()
+        self.assertEqual(actual_text, expected_text)
+    
+    def test_write_str_to_file_outfile_exists(self):
+        """As the file is opened with the exclusive "x" parameter in the function, a FileExistsError should be raised."""
+        text = 'test'
+        outfile = tempfile.NamedTemporaryFile()
+        self.assertRaises(FileExistsError, fs.write_str_to_file, text, outfile.name)
