@@ -56,7 +56,7 @@ class TextTest(unittest.TestCase):
     def test_get_text_no_extension(self):
         expected_text = 'test'
         # This file has no file extension
-        infile = tempfile.NamedTemporaryFile(suffix=None)
+        infile = tempfile.NamedTemporaryFile()
         # Write 'test' to the temporary file
         with open(infile.name, 'wb') as f_in:
             encoded_text = expected_text.encode('utf-8')
