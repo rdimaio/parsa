@@ -64,7 +64,7 @@ class TextTest(unittest.TestCase):
 
         # Python 2.x
         if sys.version_info[0] < 3:
-            builtin_input = '__builtins__.raw_input'
+            builtin_input = '__builtin__.raw_input'
         # Python 3.x
         else:
             builtin_input = 'builtins.input'
