@@ -21,8 +21,6 @@ import os
 import sys
 import tempfile
 
-# Used to check print() output from utils/text.py
-# https://stackoverflow.com/a/34738440
 if sys.version_info[0] < 3:
     import StringIO as io
     import mock
