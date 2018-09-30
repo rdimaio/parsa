@@ -8,9 +8,6 @@ Tests:
         extension_not_supported
         no_extension
 
-
-
-    
     _process_text:
         utf8
         pdf
