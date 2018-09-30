@@ -38,15 +38,6 @@ if sys.version_info[0] < 3:
 sys.path.append(os.path.abspath('..'))
 from parsa.utils import filesystem as fs
 
-
-# TODO
-# test_compose_unique_filepath_no_conflicts_in_outdir: maybe create a temp dir in which to create the file,
-# instead of creating it in the /tmp/ folder (which might already have a file named foo.txt inside, because of other
-# programs in the systems)
-#
-# TODO
-# maybe avoid deleting files as a precaution, since folders are deleted recursively - might save some time
-
 class FilepathCompositionTestCase(unittest.TestCase):
     """Base class for tests regarding compose_unique_filepath."""
 
@@ -94,9 +85,22 @@ class FilepathCompositionTest(FilepathCompositionTestCase):
         """Compose an output filepath for 'foo.pdf', with no file named 'foo.txt' in the output directory.
         Expected output: 'foo.txt'
         """
-        # Get directory where temporary files are created
-        outdir = tempfile.gettempdir()
-        outfile = fs.compose_unique_filepath(self.infile, outdir)
+        # Python 2.x
+        # Differences with the Python 3.x test:
+        #   tempfile.mkdtemp() is used instead of tempfile.TemporaryDirectory()
+        #   shutil.rmtree is used instead of os.remove to remove the temporary directory
+        if sys.version_info[0] < 3:
+            # Work in a temporary directory
+            outdir = tempfile.mkdtemp()
+            outfile = fs.compose_unique_filepath(self.infile, outdir)
+            # Remove the temporary directory (mdktemp must be manually deleted)
+            # shutil.rmtree is used instead of os.remove to avoid OSError
+            shutil.rmtree(outdir, ignore_errors=True)
+        # Python 3.x
+        else:
+            # Work in a temporary directory
+            with tempfile.TemporaryDirectory() as outdir:
+                outfile = fs.compose_unique_filepath(self.infile, outdir)
         expected_outfile = os.path.join(outdir, 'foo.txt')
         self.assertEqual(outfile, expected_outfile)
 
