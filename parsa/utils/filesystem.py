@@ -52,6 +52,7 @@ def get_filelist(indir):
         # Remove the parsaoutput folder from the list of directories to scan
         # (allowed by topdown=True in os.walk's parameters)
         # https://stackoverflow.com/a/19859907
+        # TODO - shouldn't be a problem if custom output folder isn't parsaoutput, but still check if it's problematic
         dirs[:] = [d for d in dirs if d != 'parsaoutput']
         for filename in files:
             filepath = os.path.join(root, filename)
@@ -69,5 +70,5 @@ def set_outdir(args_outdir, indir):
 
 def write_str_to_file(text, outfile):
     """Write input text string to a file."""
-    with open(outfile, "x") as fout:
+    with open(outfile, "w") as fout:
         fout.write(text)

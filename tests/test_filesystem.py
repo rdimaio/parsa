@@ -708,9 +708,3 @@ class FileSystemTest(unittest.TestCase):
                 with open(outfile, 'r') as f_out:
                     actual_text = f_out.read()
         self.assertEqual(actual_text, expected_text)
-    
-    def test_write_str_to_file_outfile_exists(self):
-        """As the file is opened with the exclusive "x" parameter in the function, a FileExistsError should be raised."""
-        text = 'test'
-        outfile = tempfile.NamedTemporaryFile()
-        self.assertRaises(FileExistsError, fs.write_str_to_file, text, outfile.name)
