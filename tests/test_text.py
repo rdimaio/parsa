@@ -16,9 +16,7 @@ Tests:
         pdf
 """
 
-import textract
 import unittest
-from unittest import mock
 import os
 import sys
 import tempfile
@@ -27,7 +25,9 @@ import tempfile
 # https://stackoverflow.com/a/34738440
 if sys.version_info[0] < 3:
     import StringIO as io
+    import mock
 else:
+    from unittest import mock
     import io
 
 sys.path.append(os.path.abspath('..'))
@@ -72,7 +72,7 @@ class TextTest(unittest.TestCase):
             builtin_input = 'builtins.input'
 
         # Call get_text, mocking the input for _infile_extension as txt when the function prompts for it
-        with unittest.mock.patch(builtin_input, return_value='txt'):
+        with mock.patch(builtin_input, return_value='txt'):
             extracted_text = txt.get_text(infile.name)
         self.assertEqual(extracted_text, expected_text)
     
