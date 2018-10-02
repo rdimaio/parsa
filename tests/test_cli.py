@@ -13,7 +13,7 @@ import unittest
 import os
 import sys
 import inspect
-import argparse
+
 if sys.version_info[0] < 3:
     import mock
 else:
@@ -22,13 +22,6 @@ else:
 sys.path.append(os.path.abspath('..'))
 from parsa.utils import cli
 
-def get_default_args(func):
-    signature = inspect.signature(func)
-    return {
-        k: v.default
-        for k, v in signature.parameters.items()
-        if v.default is not inspect.Parameter.empty
-    }
 
 class CLITest(unittest.TestCase):
 
