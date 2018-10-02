@@ -2,8 +2,8 @@
 Tests:
     parse_arguments:
         empty_args
-        args_output_not_passed
-        with_outdir
+        no_output_arg_passed
+        output_arg_passed
 
     _set_arguments:
         tested implicitly in the parse_arguments test
