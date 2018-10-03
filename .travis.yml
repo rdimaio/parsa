@@ -22,7 +22,7 @@ install:
 
 script:
   - python -m unittest discover tests
-  - coverage.py run -m unittest discover
+  - coverage run -m unittest discover
 
 after_success:
   - codecov
