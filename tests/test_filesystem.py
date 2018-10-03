@@ -44,7 +44,8 @@ class FilepathCompositionTestCase(unittest.TestCase):
     # Test infile name
     infile = 'foo.pdf'
 
-    def generate_conflicts(self, conflicts_count, outdir):
+    @staticmethod
+    def generate_conflicts(conflicts_count, outdir):
         """Generate conflicting filepaths for compose_unique_filepath.
         conflicts_count specifies the number of conflicting filepaths to create.
         First conflict: foo.txt
