@@ -19,7 +19,7 @@ before_install:
   - sudo apt-get install -y python python-dev swig python-pip build-essential git libpulse-dev
 install:
   - pip install -r requirements.txt
-  - pip install -r codecov
+  - pip install codecov
 
 script:
   - python -m unittest discover tests
