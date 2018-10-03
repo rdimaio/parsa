@@ -24,6 +24,11 @@ Tests:
     write_str_to_file:
         basic test
         outfile_exists
+    
+Tests for test_filesystem.py:
+    generate_conflicts:
+        value_error
+        type_error
 """
 
 import unittest
@@ -81,6 +86,16 @@ class FilepathCompositionTest(FilepathCompositionTestCase):
     inside with statements, which need to be 
     inside the test functions themselves.
     """
+
+    def test_generate_conflicts_value_error(self):
+        conflicts_count = 0
+        outdir = 'foo'
+        self.assertRaises(ValueError, self.generate_conflicts, conflicts_count, outdir)
+    
+    def test_generate_conflicts_type_error(self):
+        conflicts_count = 'foo'
+        outdir = 'bar'
+        self.assertRaises(TypeError, self.generate_conflicts, conflicts_count, outdir)
 
     def test_compose_unique_filepath_no_conflicts_in_outdir(self):
         """Compose an output filepath for 'foo.pdf', with no file named 'foo.txt' in the output directory.
