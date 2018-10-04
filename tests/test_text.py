@@ -88,4 +88,3 @@ class TextTest(unittest.TestCase):
         decoded_text2 = txt._process_text(encoded_text, '.pdf')
         self.assertEqual(decoded_text1, expected_text)
         self.assertEqual(decoded_text2, expected_text)
-        

@@ -27,11 +27,15 @@ def get_text(infile, _infile_extension=None):
         print("Error while parsing file: " + infile)
         print("Extension not supported\n")
     # Skip file if parsing has failed
-    except textract.exceptions.ShellError as e:
+    except textract.exceptions.ShellError as e: # pragma: no cover
+        # Reason for no coverage: cannot be tested, as it cannot be reproduced.
+        # The only reason this exception is caught is to not block the flow of the program in case it happens.
         print("Error while parsing file: " + infile)
         print(e)
     # If the file has no explicit extension, prompt the user for it
-    except UnicodeDecodeError:
+    except UnicodeDecodeError: # pragma: no cover
+        # Reason for no coverage: it's tested in get_text_no_extension in test_text.py
+        # but it's not counted by coverage.py, probably because mock.patch is used.
         print("Error while parsing file: " + infile)
         print("File has no extension\n")
 

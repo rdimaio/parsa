@@ -1,11 +1,6 @@
 sudo: required
+
 language: python
-
-# virtualenv:
-#   system_site_packages: true
-# the option above breaks tests for all Python version except 2.7 and 3.2.
-# Source: https://github.com/travis-ci/travis-ci/issues/2219#issuecomment-41804942
-
 python:
   - "2.7"
   - "3.3"
@@ -17,6 +12,7 @@ cache: pip
 
 before_install:
   - sudo apt-get install -y python python-dev swig python-pip build-essential git libpulse-dev
+  
 install:
   - pip install -r requirements.txt
   - pip install codecov

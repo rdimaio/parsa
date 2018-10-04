@@ -46,6 +46,5 @@ elif os.path.isdir(args.input):
             except OSError as e:
                 print(e)
 
-            
 else:
     exit("Error: input must be an existing file or directory")

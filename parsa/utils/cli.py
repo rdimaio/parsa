@@ -10,7 +10,9 @@ Functions:
 
 import argparse
 
-class _SmartFormatter(argparse.HelpFormatter):
+class _SmartFormatter(argparse.HelpFormatter): # pragma: no cover
+    # Reason for no coverage: cannot be tested, as it's only used internally by argparse
+    # (passed in as a formatter_class in _set_arguments)
     """Allows formatting in the CLI help menu.
     Called by beginning a string with R| in _set_arguments().
     https://stackoverflow.com/a/22157136
