@@ -13,10 +13,10 @@ import unittest
 import os
 import sys
 
-if sys.version_info[0] < 3:
-    import mock
-else:
+try:
     from unittest import mock
+except ImportError:
+    import mock
 
 sys.path.append(os.path.abspath('..'))
 from parsa.utils import cli

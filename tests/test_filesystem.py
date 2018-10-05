@@ -84,7 +84,8 @@ class FilepathCompositionTest(FilepathCompositionTestCase):
     is required for Python 2.x and Python 3.x.
     Moreover, the tests involve operating
     inside with statements, which need to be 
-    inside the test functions themselves.
+    inside the test functions themselves
+    (also causing a deal of code repetition)
     """
 
     def test_generate_conflicts_value_error(self):

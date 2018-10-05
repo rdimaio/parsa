@@ -18,12 +18,15 @@ import os
 import sys
 import tempfile
 
-if sys.version_info[0] < 3:
-    import StringIO as io
-    import mock
-else:
+try:
     from unittest import mock
+except ImportError:
+    import mock
+
+try:
     import io
+except ImportError:
+    import StringIO as io
 
 sys.path.append(os.path.abspath('..'))
 from parsa.utils import text as txt
