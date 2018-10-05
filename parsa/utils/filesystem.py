@@ -49,23 +49,23 @@ def get_filelist(indir):
     # Cycle through all files in the directory recursively
     # https://stackoverflow.com/a/36898903
     for root, dirs, files in os.walk(indir, topdown=True):
-        # Remove the parsaoutput folder from the list of directories to scan
-        # (allowed by topdown=True in os.walk's parameters)
-        # https://stackoverflow.com/a/19859907
-        # TODO - shouldn't be a problem if custom output folder isn't parsaoutput, but still check if it's problematic
-        dirs[:] = [d for d in dirs if d != 'parsaoutput']
         for filename in files:
             filepath = os.path.join(root, filename)
             filelist.append(filepath)
     return filelist
 
-def set_outdir(args_outdir, indir):
+def set_outdir(args_outdir, indir, input_isdir=False):
     """Set output directory based on whether a custom outside directory was provided or not, and return it."""
     # If output directory wasn't provided, set it to the input directory
     if args_outdir == None:
         outdir = indir
+        # Default output directory if input is a folder
+        if input_isdir:
+            outdir = os.path.join(outdir, 'parsaoutput')
     else:
         outdir = args_outdir
+    # Create outdir
+    os.makedirs(outdir, exist_ok=True)
     return outdir
 
 def write_str_to_file(text, outfile):

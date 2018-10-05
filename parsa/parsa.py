@@ -30,10 +30,7 @@ elif os.path.isdir(args.input):
 
     # Set IO variables
     indir = args.input
-    outdir = os.path.join(fs.set_outdir(args.output, indir), 'parsaoutput')
-
-    # Create output folder
-    os.makedirs(outdir, exist_ok=True)
+    outdir = fs.set_outdir(args.output, indir, input_isdir=True)
 
     filelist = fs.get_filelist(indir)
 
