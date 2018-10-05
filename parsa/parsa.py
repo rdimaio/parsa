@@ -15,7 +15,7 @@ if os.path.isfile(args.input):
     outdir = fs.set_outdir(args.output, indir)
 
     # Extract text
-    text = txt.get_text(infile)
+    text = txt.get_text(infile, disable_no_ext_prompt=args.noprompt)
     
     # If text has been extracted successfully (and infile was not empty)
     if text:
@@ -38,7 +38,7 @@ elif os.path.isdir(args.input):
     filelist = fs.get_filelist(indir)
 
     for infile in filelist:
-        text = txt.get_text(infile)
+        text = txt.get_text(infile, disable_no_ext_prompt=args.noprompt)
         if text:
             outfile = fs.compose_unique_filepath(infile, outdir)
             try:

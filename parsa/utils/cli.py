@@ -36,6 +36,9 @@ def _set_arguments():
     'Parsa can parse multiple formats at once, ' 
     'writing them to .txt files in the directory of choice.'), formatter_class=_SmartFormatter)
 
+    argparser.add_argument('--noprompt', '-n', action='store_true', help=('ignore files without an extension and '
+    'don\'t prompt the user to input their extension'))
+
     argparser.add_argument('input', help=('input file or folder; if a folder is passed as input, '
     'parsa will scan every file inside it recursively (scanning subfolders as well)'))
 

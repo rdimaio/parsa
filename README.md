@@ -10,3 +10,4 @@ Parsa is a [textract](https://github.com/deanmalmgren/textract)-based CLI multif
 
 [![Build Status](https://travis-ci.com/rdimaio/parsa.svg?branch=master)](https://travis-ci.com/rdimaio/parsa)
 [![Code Coverage](https://codecov.io/gh/rdimaio/parsa/branch/master/graph/badge.svg)](https://codecov.io/gh/rdimaio/parsa)
+[![SemVer Package Version](https://img.shields.io/badge/Version-1.1.0-blue.svg)](https://github.com/rdimaio/parsa)

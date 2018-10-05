@@ -8,7 +8,7 @@ Functions:
 import os
 import textract
 
-def get_text(infile, _infile_extension=None):
+def get_text(infile, _infile_extension=None, disable_no_ext_prompt=False):
     """Extract text from the input file using textract, returning an empty string if failing to do so.
     If the infile does not explicitly have an extension (UnicodeDecodeError), 
     the user will be prompted to input the correct extension (either with or without a dot). 
@@ -38,13 +38,12 @@ def get_text(infile, _infile_extension=None):
         # but it's not counted by coverage.py, probably because mock.patch is used.
         print("Error while parsing file: " + infile)
         print("File has no extension\n")
-
-        # Prompt the user for the input file's extension
-        # textract.process adds a dot before the input extension if it's not already present (e.g. txt -> .txt)
-        _infile_extension = input("Please input the file's extension (e.g. .pdf or pdf):")
-        
-        # Call the function again; an exception will be raised on failure
-        text = get_text(infile, _infile_extension)
+        if not disable_no_ext_prompt:
+            # Prompt the user for the input file's extension
+            # textract.process adds a dot before the input extension if it's not already present (e.g. txt -> .txt)
+            _infile_extension = input("Please input the file's extension (e.g. .pdf or pdf):")
+            # Call the function again; an exception will be raised on failure
+            text = get_text(infile, _infile_extension)
     # If no exceptions happened, format text adeguately
     else:
         # Extract input file's extension unless it has already been specified
