@@ -65,7 +65,9 @@ def set_outdir(args_outdir, indir, input_isdir=False):
     else:
         outdir = args_outdir
     # Create outdir
-    os.makedirs(outdir, exist_ok=True)
+    # (exist_ok=True flag in os.makedirs is not used, as it's not present in Python 2.x)
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
     return outdir
 
 def write_str_to_file(text, outfile):
