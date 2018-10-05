@@ -20,6 +20,7 @@ Tests:
     set_outdir:
         with_outdir_provided
         no_outdir_provided
+        no_outdir_provided_input_isdir
 
     write_str_to_file:
         basic test
@@ -35,10 +36,7 @@ import unittest
 import os
 import sys
 import tempfile
-
-# Needed for Python 2.x tests to close directories
-if sys.version_info[0] < 3:
-    import shutil
+import shutil
 
 sys.path.append(os.path.abspath('..'))
 from parsa.utils import filesystem as fs
@@ -691,17 +689,27 @@ class FileSystemTest(unittest.TestCase):
         self.assertEqual(set(files_created), set(filelist))
 
     def test_set_outdir_with_outdir_provided(self):
-        args_outdir = 'foo'
         indir = 'bar'
+        args_outdir = 'foo'
         outdir = fs.set_outdir(args_outdir, indir)
         self.assertEqual(outdir, args_outdir)
+        shutil.rmtree(outdir, ignore_errors=True)
 
     def test_set_outdir_no_outdir_provided(self):
         '''If no args_outdir is provided, then outdir will be set to the indir.'''
-        args_outdir = None
         indir = 'bar'
+        args_outdir = None
         outdir = fs.set_outdir(args_outdir, indir)
         self.assertEqual(outdir, indir)
+        shutil.rmtree(outdir, ignore_errors=True)
+
+    def test_set_outdir_no_outdir_provided_input_isdir(self):
+        indir = tempfile.mkdtemp()
+        args_outdir = None
+        expected_outdir = os.path.join(indir, 'parsaoutput')
+        outdir = fs.set_outdir(args_outdir, indir, input_isdir=True)
+        shutil.rmtree(indir, ignore_errors=True)
+        self.assertEqual(outdir, expected_outdir)
     
     def test_write_str_to_file(self):
         expected_text = 'test'
