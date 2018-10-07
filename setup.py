@@ -1,9 +1,16 @@
-from distutils.core import setup
+from setuptools import setup
 
-setup(name='Parsa',
-      version='1.1.4',
-      description='Textract-based multiformat text parser',
+setup(name='parsa',
+      version='1.1.3',
+      description='A multiformat text parser',
+      url='http://github.com/rdimaio/parsa',
       author='Riccardo Di Maio',
       author_email='riccardodimaio11@gmail.com',
-      url='https://github.com/rdimaio/parsa',
-     )
+      license='MIT',
+      packages=['parsa'],
+      entry_points = {
+            'console_scripts': [
+                  'parsa = parsa.parsa:main'
+            ]
+      },
+      zip_safe=False)

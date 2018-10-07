@@ -1,7 +1,7 @@
 <h1 align="center">Parsa</h1>
 
 <div align="center">
-  <strong>Textract-based multiformat text parser</strong>
+  <strong>The text parser that doesn't care about your file extensions</strong>
 </div>
 
 <br />
@@ -24,6 +24,7 @@
   </a>
 </div>
 
+
 <p align="center">
   <a href="#key-features">Key Features</a> •
   <a href="#how-to-use">Usage</a> •
@@ -32,17 +33,33 @@
   <a href="https://github.com/rdimaio/parsa/blob/master/LICENSE">MIT License</a>
 </p>
 
-# parsa
-Parsa is a [textract](https://github.com/deanmalmgren/textract)-based CLI text parser that supports most file extensions.
+
+<!-- TODO - Put gif here -->
+
+Parsa is a [textract](https://github.com/deanmalmgren/textract)-based CLI text parser that supports multiple file extensions.
+It takes any number of inputs, and outputs them to .txt files in a directory of choice, preserving the structure of the original text.
+
+Use case scenario:
+- You have many files of different kinds of formats all together, and you want to parse text from all of them
+
 Parsa can parse multiple formats at once, writing them to .txt files in the directory of choice.
 See also:
 - [parsa-gui](https://github.com/rdimaio/parsa-gui) - Graphical version of parsa
 
-# Supported formats
-See [this list](https://textract.readthedocs.io/en/stable/#currently-supporting) from textract's documentation.
+## Supported formats
+See [this page](https://textract.readthedocs.io/en/stable/#currently-supporting) from textract's documentation for a full list of the supported formats and their linked dependencies.
 
-# Install
+# Key features
+
+# Installation
+## Requirements
+- Linux
+- Python 2.7/3.x 
+
 ## Linux
+```bash
+$ pip install parsa
+```
 
 # Usage
 ```bash
@@ -56,10 +73,17 @@ $ parsa path/to/input path/to/output
 $ parsa --noprompt path/to/input
 ```
 
+## Tests
+```bash
+$ python -m unittest discover tests
+```
 
 ## Related projects
 - [xparsa](https://github.com/rdimaio/xparsa) - Extended parsa, with statistics like word frequency
 - [xparsa-gui](https://github.com/rdimaio/xparsa-gui) - GUI for xparsa
 
+## Contributing
+Pull requests are welcome! If you would like to include/remove/change a major feature, please open an issue first.
+
 ## License
-MIT
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/rdimaio/parsa/blob/master/LICENSE) file for details.
