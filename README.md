@@ -1,4 +1,6 @@
-<h1 align="center">Parsa</h1>
+<p align="center">
+  <img src="parsa/img/logo.png?raw=true" alt="Logo"/>
+</p>
 
 <div align="center">
   <strong>The text parser that doesn't care about your file extensions</strong>
@@ -50,6 +52,8 @@ See also:
 See [this page](https://textract.readthedocs.io/en/stable/#currently-supporting) from textract's documentation for a full list of the supported formats and their linked dependencies.
 
 # Key features
+- Takes an arbitrary of inputs
+
 
 # Installation
 ## Requirements
@@ -57,12 +61,38 @@ See [this page](https://textract.readthedocs.io/en/stable/#currently-supporting)
 - Python 2.7/3.x 
 
 ## Linux
+Python can be installed via `pip`.
+
 ```bash
 $ pip install parsa
 ```
 
+or clone from directory
+
 # Usage
 ```bash
+# Help message
+$ parsa --help
+usage: parsa [-h] [--noprompt] [--output [OUTPUT]] input
+
+Textract-based text parser that supports most text file extensions. Parsa can
+parse multiple formats at once, writing them to .txt files in the directory of
+choice.
+
+positional arguments:
+  input                 input file or folder; if a folder is passed as input,
+                        parsa will scan every file inside it recursively
+                        (scanning subfolders as well)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --noprompt, -n        ignore files without an extension and don't prompt the
+                        user to input their extension
+  --output [OUTPUT], -o [OUTPUT]
+                        folder where the output files will be stored. The default folder is:
+                        (a) the input file's parent folder, if the input is a file, or
+                        (b) a folder named 'parsaoutput' located in the input folder, if the input is a folder.
+
 # Basic usage
 $ parsa path/to/input
 
@@ -79,11 +109,11 @@ $ python -m unittest discover tests
 ```
 
 ## Related projects
-- [xparsa](https://github.com/rdimaio/xparsa) - Extended parsa, with statistics like word frequency
-- [xparsa-gui](https://github.com/rdimaio/xparsa-gui) - GUI for xparsa
+- [xparsa](https://github.com/rdimaio/xparsa) - Extended parsa, enhanced with statistics about the parsed files (WIP)
+- [xparsa-gui](https://github.com/rdimaio/xparsa-gui) - GUI for xparsa (WIP)
 
 ## Contributing
 Pull requests are welcome! If you would like to include/remove/change a major feature, please open an issue first.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/rdimaio/parsa/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
