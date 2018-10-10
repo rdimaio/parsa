@@ -33,8 +33,8 @@
   <a href="https://github.com/rdimaio/parsa/blob/master/LICENSE">MIT License</a>
 </p>
 
+![Demo GIF](parsa/img/demo.gif?raw=true "Demo GIF")
 
-<!-- TODO - Put gif here -->
 
 Parsa is a [textract](https://github.com/deanmalmgren/textract)-based CLI text parser that supports multiple file extensions.
 It takes any number of inputs, and outputs them to .txt files in a directory of choice, preserving the structure of the original text.
