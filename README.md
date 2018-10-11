@@ -76,6 +76,11 @@ $ cd parsa
 $ python setup.py install
 ```
 
+### Tests
+```bash
+$ python -m unittest discover tests
+```
+
 # Usage
 ## Single input
 ```bash
@@ -127,11 +132,6 @@ optional arguments:
                         folder where the output files will be stored. The default folder is:
                         (a) the input file's parent folder, if the input is a file, or
                         (b) a folder named 'parsaoutput' located in the input folder, if the input is a folder.
-```
-
-## Tests
-```bash
-$ python -m unittest discover tests
 ```
 
 # Related projects
