@@ -1,5 +1,5 @@
 <div align="center">
-
+&nbsp;&nbsp;
   <a href="https://github.com/rdimaio/parsa">
     <img src="parsa/img/logo.png?raw=true" alt="Logo"/>
   </a>
