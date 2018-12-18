@@ -1,7 +1,8 @@
 import os
-import parsa.utils.cli as cli
-import parsa.utils.filesystem as fs
-import parsa.utils.text as txt
+
+from parsa.utils import cli
+from parsa.utils import filesystem as fs
+from parsa.utils import text as txt
 
 def main():
     # Get CLI arguments

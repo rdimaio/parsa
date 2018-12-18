@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -12,11 +12,12 @@ setup(name='parsa',
       author='Riccardo Di Maio',
       author_email='riccardodimaio11@gmail.com',
       license='MIT',
-      packages=['parsa'],
+      keywords = 'parsa',
+      packages = find_packages(exclude=['tests*']),
       entry_points = {
             'console_scripts': [
-                  'parsa = parsa.parsa:main'
-            ]
+                  'parsa=parsa.parsa:main',
+            ],
       },
       zip_safe=False,
       classifiers=[
